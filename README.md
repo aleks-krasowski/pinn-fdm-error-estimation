@@ -1,6 +1,6 @@
 # Building Trust in PINNs: Error Estimation through Finite Difference Methods
 
-This repository accompanies the paper "Building Trust in PINNs: Error Estimation through Finite Difference Methods" (submitted to the XAI World Conference 2026). 
+This repository accompanies the paper "[Building Trust in PINNs: Error Estimation through Finite Difference Methods](https://arxiv.org/abs/2603.15526)" (submitted to the XAI World Conference 2026). 
 
 We propose a post-hoc method that estimates the pointwise error of physics-informed neural networks by solving the associated error equation via finite difference methods, requiring no knowledge of the true solution.
 
@@ -104,3 +104,19 @@ Currently implemented problems include
         - $u(x_\mathrm{max}, y)=0$ (Dirichlet)
         - $u(x, y_\mathrm{min})=0$ (Dirichlet)
         - $u(x, y_\mathrm{max})=0$ (Dirichlet)
+
+# Citing
+
+Please use the following citation when referencing this work in literature:
+
+```bibtex
+@misc{krasowski2026buildingtrustpinnserror,
+      title={Building Trust in PINNs: Error Estimation through Finite Difference Methods}, 
+      author={Aleksander Krasowski and René P. Klausen and Aycan Celik and Sebastian Lapuschkin and Wojciech Samek and Jonas Naujoks},
+      year={2026},
+      eprint={2603.15526},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2603.15526}, 
+}
+```
