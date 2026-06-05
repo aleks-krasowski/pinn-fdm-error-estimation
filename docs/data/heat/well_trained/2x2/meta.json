@@ -1,0 +1,1 @@
+{"problem":"heat","model_type":"well_trained","grid":"2x2","nx":2,"nt":2,"x_axis":[0.0,1.0],"t_axis":[0.0,1.0],"x_label":"x","y_label":"t","max_error":2.109059449156182e-16,"mean_error":5.272648622890455e-17,"l2_relative":0.00010543993580171458,"pinn_iterations":10000,"pinn_collocation":10000,"pinn_layers":[2,20,20,20,1],"seed":42}
