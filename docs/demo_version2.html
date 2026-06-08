@@ -434,9 +434,11 @@ const HEATMAP_IDS = ['plot-pinn','plot-true','plot-err'];
 
 function showSpinners() {
   HEATMAP_IDS.forEach(id => {
+    Plotly.purge(id);
     document.getElementById(id).innerHTML =
       `<div class="state-box"><div class="spinner"></div><span>Loading…</span></div>`;
   });
+  Plotly.purge('plot-line');
   document.getElementById('plot-line').innerHTML =
     `<div class="state-box tall"><div class="spinner"></div><span>Loading…</span></div>`;
 }
