@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Building Trust in PINNs · Interactive Demo</title>
   <script src="https://cdn.plot.ly/plotly-3.5.1.min.js" charset="utf-8"></script>
+  <script>
+    MathJax = { tex:{ inlineMath:[['$','$']] }, options:{ skipHtmlTags:['script','noscript','style','textarea'] } };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet" />
@@ -238,10 +242,10 @@
 const DATA_ROOT = './data';
 
 const PROBLEM_META = {
-  heat:            { desc:'u_t = α u_xx · sinusoidal IC, zero Dirichlet BCs',   axisKey:'t_axis', axisLabel:'t' },
-  wave:            { desc:'u_tt = c² u_xx · sinusoidal IC, zero Dirichlet BCs', axisKey:'t_axis', axisLabel:'t' },
-  drift_diffusion: { desc:'u_t + β u_x = D u_xx · sinusoidal IC',               axisKey:'t_axis', axisLabel:'t' },
-  poisson_2d:      { desc:'-(u_xx + u_yy) = f(x,y) · zero Dirichlet BCs',       axisKey:'y_axis', axisLabel:'y' },
+  heat:            { desc:'$u_t = \\alpha\\, u_{xx}$,\u2002 sinusoidal IC, zero Dirichlet BCs',   axisKey:'t_axis', axisLabel:'t' },
+  wave:            { desc:'$u_{tt} = c^2 u_{xx}$,\u2002 sinusoidal IC, zero Dirichlet BCs', axisKey:'t_axis', axisLabel:'t' },
+  drift_diffusion: { desc:'$u_t + \\beta\\, u_x = D\\, u_{xx}$,\u2002 sinusoidal IC', axisKey:'t_axis', axisLabel:'t' },
+  poisson_2d:      { desc:'$-(u_{xx} + u_{yy}) = f(x,y)$,\u2002 zero Dirichlet BCs', axisKey:'y_axis', axisLabel:'y' },
 };
 
 const MODEL_META = {
@@ -328,19 +332,16 @@ function drawSlice(idx) {
   const row = arr => arr[idx] ?? arr[0];
 
   const traces = [
-    { x:xArr, y:row(pinn),      mode:'lines', name:'PINN',                    line:{color:C.pinn,      width:2.5},           hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>` },
-    { x:xArr, y:row(exact),     mode:'lines', name:'Exact',                   line:{color:C.exact,     width:2,  dash:'dash'},hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
-    { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',              line:{color:C.errTrue,   width:2,  dash:'solid'},   yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>` },
-    { x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)', line:{color:C.errApprox, width:1.8,dash:'dot'},    yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>Est. (our method): %{y:.4e}<extra></extra>` },
-    { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. Error (FDM)',        line:{color:C.errFdm,    width:1.8,dash:'dashdot'},yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>Est. (FDM): %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',              line:{color:C.errTrue,   width:2,  dash:'solid'},   hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)', line:{color:C.errApprox, width:1.8,dash:'dot'},     hovertemplate:`x: %{x:.3f}<br>Est. (our method): %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. Error (FDM)',        line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>Est. (FDM): %{y:.4e}<extra></extra>` },
   ];
 
   const layout = {
     ...LAYOUT_BASE,
     margin:{t:14,b:52,l:62,r:62},
     xaxis:{...LAYOUT_BASE.xaxis,title:{text:'x',font:{size:11}}},
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}}},
-    yaxis2:{title:{text:'error',font:{size:11}},overlaying:'y',side:'right',gridcolor:'rgba(255,127,0,0.08)',zerolinecolor:'rgba(255,127,0,0.2)',tickfont:{size:10}},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'error',font:{size:11}}},
     legend:{orientation:'h',x:0.01,y:1.08,font:{size:10},bgcolor:'transparent'},
   };
 
@@ -392,7 +393,7 @@ async function render() {
     `${prob} · ${model} · grid ${grid}`;
 
   // heatmaps
-  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'Blues');
+  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'RdPu');
   drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu');
   drawHeatmap('plot-err',  xAxis, axis2, _d.errTrue, '|error|', 'x', axLabel, 'YlOrRd');
 
@@ -444,7 +445,8 @@ function updateRunBtn() {
     badge.className   = `model-badge ${MODEL_META[model].cls}`;
   }
   if (prob && PROBLEM_META[prob]) {
-    document.getElementById('prob-desc').textContent = PROBLEM_META[prob].desc;
+    document.getElementById('prob-desc').innerHTML = PROBLEM_META[prob].desc;
+    if (window.MathJax) MathJax.typesetPromise([document.getElementById('prob-desc')]);
   }
 }
 
