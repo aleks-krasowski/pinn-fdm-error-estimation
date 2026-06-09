@@ -176,13 +176,12 @@
       <label for="sel-grid">FDM Grid Size</label>
       <select id="sel-grid">
         <option value="" disabled selected>— select grid —</option>
-        <option value="2x2">2 × 2</option>
-        <option value="4x4">4 × 4</option>
         <option value="8x8">8 × 8</option>
         <option value="16x16">16 × 16</option>
         <option value="32x32">32 × 32</option>
         <option value="64x64">64 × 64</option>
         <option value="128x128">128 × 128</option>
+        <option value="256x256">256 × 256</option>
       </select>
       <span class="control-desc">nx × nt for FDM solver</span>
     </div>
@@ -264,7 +263,7 @@ const MODEL_META = {
   rand_init:    { label:'Random Init · 0 iters · seed 42',    cls:'random'  },
 };
 
-const C = { pinn:'#377eb8', exact:'#e41a1c', err:'#ff7f00' };
+const C = { pinn:'#377eb8', exact:'#e41a1c', errApprox:'#ff7f00', errFdm:'#984ea3', errTrue:'#4daf4a' };
 
 const LAYOUT_BASE = {
   paper_bgcolor:'transparent',
@@ -292,16 +291,20 @@ async function fetchJSON(model, grid, filename) {
 }
 
 async function loadAll(model, grid) {
-  const [preds, trueSol, errApprox, meta] = await Promise.all([
+  const [preds, trueSol, errApprox, errFdm, errTrue, meta] = await Promise.all([
     fetchJSON(model, grid, 'predictions.json'),
     fetchJSON(model, grid, 'true_solution.json'),
     fetchJSON(model, grid, 'error_approximation.json'),
+    fetchJSON(model, grid, 'error_fdm.json'),
+    fetchJSON(model, grid, 'error_true.json'),
     fetchJSON(model, grid, 'meta.json'),
   ]);
   return {
-    pinn:  preds.data,
-    exact: trueSol.data,
-    err:   errApprox.data,
+    pinn:    preds.data,
+    exact:   trueSol.data,
+    errApprox: errApprox.data,
+    errFdm:  errFdm.data,
+    errTrue: errTrue.data,
     meta,
   };
 }
@@ -324,7 +327,7 @@ function drawHeatmap(divId, xArr, tArr, zArr, cbTitle, colorscale) {
 // ── Slice plot ────────────────────────────────────────────────────────────────
 function drawSlice(idx) {
   if (!_d) return;
-  const { pinn, exact, err, meta } = _d;
+  const { pinn, exact, errApprox, errFdm, errTrue, meta } = _d;
   const xArr = meta.x_axis;
   const tArr = meta.t_axis;
   const tVal = tArr[idx];
@@ -348,10 +351,22 @@ function drawSlice(idx) {
       hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>`,
     },
     {
-      x:xArr, y:row(err), mode:'lines', name:'|error|',
-      line:{ color:C.err, width:1.8, dash:'dot' },
+      x:xArr, y:row(errTrue), mode:'lines', name:'True Error',
+      line:{ color:C.errTrue, width:2, dash:'solid' },
       yaxis:'y2',
-      hovertemplate:`x: %{x:.3f}<br>|error|: %{y:.4e}<extra></extra>`,
+      hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>`,
+    },
+    {
+      x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)',
+      line:{ color:C.errApprox, width:1.8, dash:'dot' },
+      yaxis:'y2',
+      hovertemplate:`x: %{x:.3f}<br>Est. error (our method): %{y:.4e}<extra></extra>`,
+    },
+    {
+      x:xArr, y:row(errFdm), mode:'lines', name:'Est. Error (FDM)',
+      line:{ color:C.errFdm, width:1.8, dash:'dashdot' },
+      yaxis:'y2',
+      hovertemplate:`x: %{x:.3f}<br>Est. error (FDM): %{y:.4e}<extra></extra>`,
     },
   ];
 
@@ -415,7 +430,7 @@ async function render() {
   // heatmaps
   drawHeatmap('plot-pinn', xAxis, tAxis, _d.pinn,  'u',        'Blues');
   drawHeatmap('plot-true', xAxis, tAxis, _d.exact, 'u',        'RdPu');
-  drawHeatmap('plot-err',  xAxis, tAxis, _d.err,   '|error|',  'YlOrRd');
+  drawHeatmap('plot-err',  xAxis, tAxis, _d.errApprox, '|error|', 'YlOrRd');
 
   // slider
   const slider = document.getElementById('slice-slider');
