@@ -299,9 +299,10 @@ async function loadAll(prob, model, grid) {
 }
 
 // ── Heatmap ───────────────────────────────────────────────────────────────────
-function drawHeatmap(divId, xArr, axis2, zArr, cbTitle, xLabel, axis2Label, colorscale) {
+function drawHeatmap(divId, xArr, axis2, zArr, cbTitle, xLabel, axis2Label, colorscale, zmin, zmax) {
   const trace = {
     type:'heatmap', x:xArr, y:axis2, z:zArr, colorscale,
+    zmin, zmax,
     colorbar:{title:{text:cbTitle,side:'right',font:{size:10}},thickness:12,len:0.85,tickfont:{size:9}},
     hovertemplate:`x: %{x:.3f}<br>${axis2Label}: %{y:.3f}<br>%{z:.4e}<extra></extra>`,
   };
@@ -316,7 +317,7 @@ function drawHeatmap(divId, xArr, axis2, zArr, cbTitle, xLabel, axis2Label, colo
 // ── Slice plot ────────────────────────────────────────────────────────────────
 function drawSlice(idx) {
   if (!_d) return;
-  const { pinn, exact, errTrue, errApprox, errFdm, meta } = _d;
+  const { errTrue, errApprox, errFdm, meta } = _d;
   const prob     = document.getElementById('sel-problem').value;
   const pmeta    = PROBLEM_META[prob];
   const xArr     = meta.x_axis;
@@ -393,9 +394,13 @@ async function render() {
     `${prob} · ${model} · grid ${grid}`;
 
   // heatmaps
-  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'RdPu');
-  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu');
-  drawHeatmap('plot-err',  xAxis, axis2, _d.errTrue, '|error|', 'x', axLabel, 'YlOrRd');
+  // shared color range for PINN and exact so they're directly comparable
+  const allU   = [..._d.pinn.flat(), ..._d.exact.flat()];
+  const uMin   = Math.min(...allU);
+  const uMax   = Math.max(...allU);
+  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'RdPu',   uMin, uMax);
+  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu',   uMin, uMax);
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errTrue, '|error|', 'x', axLabel, 'YlOrRd', undefined, undefined);
 
   // slider
   const slider = document.getElementById('slice-slider');
