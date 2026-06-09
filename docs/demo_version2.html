@@ -208,7 +208,7 @@
         <div class="plot-container" id="plot-true"></div>
       </div>
       <div class="plot-card glass">
-        <div class="plot-card-header"><div class="dot" style="background:#ff7f00"></div><span class="plot-card-title">True Error |u<sub>PINN</sub> − u<sub>exact</sub>|</span></div>
+        <div class="plot-card-header"><div class="dot" style="background:#ff7f00"></div><span class="plot-card-title">Estimated Error |e<sub>res</sub>| (our method)</span></div>
         <div class="plot-container" id="plot-err"></div>
       </div>
     </div>
@@ -243,7 +243,10 @@
 
   <footer>
     <span>Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
-    <span>Data pre-computed with DeepXDE · Visualised with Plotly.js</span>
+    <span><a href="https://arxiv.org/abs/2603.15526" target="_blank" style="color:var(--blue);text-decoration:none;">arXiv:2603.15526</a></span>
+    <span><a href="https://github.com/aleks-krasowski/pinn-fdm-error-estimation" target="_blank" style="color:var(--blue);text-decoration:none;">GitHub</a></span>
+    <span><a href="https://www.hhi.fraunhofer.de/impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
+    <span><a href="https://www.hhi.fraunhofer.de/datenschutz.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Datenschutzerklärung</a></span>
     <span id="footer-experiment"></span>
   </footer>
 
@@ -422,7 +425,7 @@ async function render() {
   const uMax   = Math.max(...allU);
   drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'RdPu',   uMin, uMax);
   drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu',   uMin, uMax);
-  drawHeatmap('plot-err',  xAxis, axis2, _d.errTrue, '|error|', 'x', axLabel, 'YlOrRd', undefined, undefined);
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, '|e_res|', 'x', axLabel, 'YlOrRd', undefined, undefined);
 
   // slider
   const slider = document.getElementById('slice-slider');
