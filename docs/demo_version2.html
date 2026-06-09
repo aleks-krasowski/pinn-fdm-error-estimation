@@ -46,16 +46,9 @@
     }
     .section-title::after{content:'';flex:1;height:1px;background:var(--border);}
 
-    .glass{
-      background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      border:1px solid var(--border);border-radius:var(--radius);
-    }
+    .glass{background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:var(--radius);}
 
-    .controls{
-      padding:24px;margin-bottom:28px;
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-      gap:20px;box-shadow:0 4px 24px rgba(55,126,184,0.10);
-    }
+    .controls{padding:24px;margin-bottom:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;box-shadow:0 4px 24px rgba(55,126,184,0.10);}
     .control-group{display:flex;flex-direction:column;gap:8px;}
     label{font-family:var(--mono);font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:var(--blue);font-weight:600;}
     select{
@@ -70,23 +63,13 @@
     select:hover{border-color:var(--orange);}
     .control-desc{font-size:12px;color:var(--text-muted);font-style:italic;}
 
-    .model-badge{
-      display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;
-      font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.06em;
-      margin-top:4px;width:fit-content;transition:background 0.3s,color 0.3s;
-    }
+    .model-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.06em;margin-top:4px;width:fit-content;transition:background 0.3s,color 0.3s;}
     .model-badge.trained{background:rgba(46,125,50,0.12);color:#2e7d32;border:1px solid rgba(46,125,50,0.25);}
     .model-badge.random {background:rgba(255,127,0,0.12); color:#b85a00;border:1px solid rgba(255,127,0,0.25);}
     .model-badge.none   {background:rgba(107,122,153,0.1);color:var(--text-muted);border:1px solid var(--border);}
     .model-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;}
 
-    .run-btn{
-      display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 32px;
-      background:var(--blue);color:white;border:none;border-radius:8px;cursor:pointer;
-      font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.08em;
-      text-transform:uppercase;transition:background 0.2s,transform 0.1s,box-shadow 0.2s;
-      box-shadow:0 2px 12px rgba(55,126,184,0.35);align-self:flex-end;
-    }
+    .run-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 32px;background:var(--blue);color:white;border:none;border-radius:8px;cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;transition:background 0.2s,transform 0.1s,box-shadow 0.2s;box-shadow:0 2px 12px rgba(55,126,184,0.35);align-self:flex-end;}
     .run-btn:hover{background:#2a6099;box-shadow:0 4px 20px rgba(55,126,184,0.45);}
     .run-btn:active{transform:scale(0.98);}
     .run-btn:disabled{background:rgba(55,126,184,0.35);cursor:not-allowed;box-shadow:none;}
@@ -108,10 +91,7 @@
 
     .plot-card{overflow:hidden;box-shadow:0 2px 16px rgba(55,126,184,0.08);transition:box-shadow 0.2s,border-color 0.2s;}
     .plot-card:hover{box-shadow:0 6px 32px rgba(55,126,184,0.16);border-color:rgba(55,126,184,0.35);}
-    .plot-card-header{
-      padding:11px 16px;border-bottom:1px solid var(--border);
-      display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.5);
-    }
+    .plot-card-header{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.5);}
     .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
     .plot-card-title{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600;}
     .plot-container{height:300px;}
@@ -120,16 +100,9 @@
     .line-card .plot-card-header{border-left:4px solid var(--blue);}
     #plot-line{height:360px;}
 
-    .slider-wrap{
-      padding:18px 24px 20px;display:flex;align-items:center;gap:16px;
-      border-top:1px solid var(--border);background:rgba(255,255,255,0.4);flex-wrap:wrap;
-    }
+    .slider-wrap{padding:18px 24px 20px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--border);background:rgba(255,255,255,0.4);flex-wrap:wrap;}
     .slider-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--blue);font-weight:600;white-space:nowrap;}
-    #slice-slider{
-      flex:1;min-width:160px;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;
-      outline:none;cursor:pointer;
-      background:linear-gradient(to right,var(--blue) var(--pct,50%),rgba(55,126,184,0.2) var(--pct,50%));
-    }
+    #slice-slider{flex:1;min-width:160px;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--blue) var(--pct,50%),rgba(55,126,184,0.2) var(--pct,50%));}
     #slice-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);border:2px solid white;box-shadow:0 1px 4px rgba(55,126,184,0.4);cursor:pointer;}
     #slice-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--blue);border:2px solid white;cursor:pointer;}
     #slice-value{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 12px;min-width:70px;text-align:center;}
@@ -146,10 +119,10 @@
     footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text-muted);display:flex;gap:24px;flex-wrap:wrap;}
 
     @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-    .controls   {animation:fadeUp 0.4s ease both;}
-    .stats-bar  {animation:fadeUp 0.4s ease 0.06s both;}
+    .controls    {animation:fadeUp 0.4s ease both;}
+    .stats-bar   {animation:fadeUp 0.4s ease 0.06s both;}
     .heatmap-grid{animation:fadeUp 0.4s ease 0.12s both;}
-    .line-card  {animation:fadeUp 0.4s ease 0.18s both;}
+    .line-card   {animation:fadeUp 0.4s ease 0.18s both;}
   </style>
 </head>
 <body>
@@ -157,11 +130,23 @@
 
   <header>
     <h1><span class="w-green">Building Trust in PINNs</span>: Error Estimation through Finite Difference Methods</h1>
-    <p class="subtitle">Select a model type and FDM grid size, then click <strong>Run Experiment</strong> to explore PINN solutions and pointwise errors for the 1-D Heat Equation.</p>
+    <p class="subtitle">Select a benchmark problem, model type and FDM grid size, then click <strong>Run Experiment</strong> to explore PINN solutions and error estimates.</p>
   </header>
 
   <!-- Controls -->
   <div class="controls glass">
+    <div class="control-group">
+      <label for="sel-problem">Benchmark Problem</label>
+      <select id="sel-problem">
+        <option value="" disabled selected>— select problem —</option>
+        <option value="heat">1-D Heat Equation</option>
+        <option value="wave">1-D Wave Equation</option>
+        <option value="drift_diffusion">1-D Drift-Diffusion</option>
+        <option value="poisson_2d">2-D Poisson Equation</option>
+      </select>
+      <span id="prob-desc" class="control-desc"></span>
+    </div>
+
     <div class="control-group">
       <label for="sel-model">Model Type</label>
       <select id="sel-model">
@@ -183,13 +168,7 @@
         <option value="128x128">128 × 128</option>
         <option value="256x256">256 × 256</option>
       </select>
-      <span class="control-desc">nx × nt for FDM solver</span>
-    </div>
-
-    <div class="control-group">
-      <label>Problem</label>
-      <div style="padding:10px 14px;font-family:var(--mono);font-size:13px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);">1-D Heat Equation</div>
-      <span class="control-desc">u_t = α u_xx · sinusoidal IC</span>
+      <span class="control-desc">nx × nt (or nx × ny) for FDM solver</span>
     </div>
 
     <div class="control-group" style="justify-content:flex-end;">
@@ -223,7 +202,7 @@
         <div class="plot-container" id="plot-true"></div>
       </div>
       <div class="plot-card glass">
-        <div class="plot-card-header"><div class="dot" style="background:#ff7f00"></div><span class="plot-card-title">Error |u<sub>PINN</sub> − u<sub>exact</sub>|</span></div>
+        <div class="plot-card-header"><div class="dot" style="background:#ff7f00"></div><span class="plot-card-title">True Error |u<sub>PINN</sub> − u<sub>exact</sub>|</span></div>
         <div class="plot-container" id="plot-err"></div>
       </div>
     </div>
@@ -235,11 +214,11 @@
     <div class="line-card glass">
       <div class="plot-card-header">
         <div class="dot" style="background:#377eb8"></div>
-        <span class="plot-card-title" id="line-title">Slice at t = —</span>
+        <span class="plot-card-title" id="line-title">Slice at — = —</span>
       </div>
       <div id="plot-line"></div>
       <div class="slider-wrap">
-        <span class="slider-label">t =</span>
+        <span class="slider-label" id="slider-axis-label">t =</span>
         <input type="range" id="slice-slider" min="0" max="31" value="0" step="1" />
         <span id="slice-value">—</span>
       </div>
@@ -258,22 +237,28 @@
 // ── Config ────────────────────────────────────────────────────────────────────
 const DATA_ROOT = './data';
 
+const PROBLEM_META = {
+  heat:            { desc:'u_t = α u_xx · sinusoidal IC, zero Dirichlet BCs',   axisKey:'t_axis', axisLabel:'t' },
+  wave:            { desc:'u_tt = c² u_xx · sinusoidal IC, zero Dirichlet BCs', axisKey:'t_axis', axisLabel:'t' },
+  drift_diffusion: { desc:'u_t + β u_x = D u_xx · sinusoidal IC',               axisKey:'t_axis', axisLabel:'t' },
+  poisson_2d:      { desc:'-(u_xx + u_yy) = f(x,y) · zero Dirichlet BCs',       axisKey:'y_axis', axisLabel:'y' },
+};
+
 const MODEL_META = {
   well_trained: { label:'Well-Trained · 10k iters · 10k pts', cls:'trained' },
   rand_init:    { label:'Random Init · 0 iters · seed 42',    cls:'random'  },
 };
 
-const C = { pinn:'#377eb8', exact:'#e41a1c', errApprox:'#ff7f00', errFdm:'#984ea3', errTrue:'#4daf4a' };
+const C = { pinn:'#377eb8', exact:'#e41a1c', errTrue:'#4daf4a', errApprox:'#ff7f00', errFdm:'#984ea3' };
 
 const LAYOUT_BASE = {
-  paper_bgcolor:'transparent',
-  plot_bgcolor:'rgba(255,255,255,0.35)',
-  margin:{ t:10, b:50, l:58, r:14 },
-  font:{ family:"'IBM Plex Mono', monospace", size:11, color:'#4a5470' },
-  xaxis:{ gridcolor:'rgba(55,126,184,0.1)', zerolinecolor:'rgba(55,126,184,0.2)' },
-  yaxis:{ gridcolor:'rgba(55,126,184,0.1)', zerolinecolor:'rgba(55,126,184,0.2)' },
+  paper_bgcolor:'transparent', plot_bgcolor:'rgba(255,255,255,0.35)',
+  margin:{t:10,b:50,l:58,r:14},
+  font:{family:"'IBM Plex Mono', monospace",size:11,color:'#4a5470'},
+  xaxis:{gridcolor:'rgba(55,126,184,0.1)',zerolinecolor:'rgba(55,126,184,0.2)'},
+  yaxis:{gridcolor:'rgba(55,126,184,0.1)',zerolinecolor:'rgba(55,126,184,0.2)'},
 };
-const PLOT_CFG = { responsive:true, displayModeBar:false };
+const PLOT_CFG = {responsive:true,displayModeBar:false};
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let _d        = null;
@@ -281,45 +266,45 @@ let _sliceIdx = 0;
 const _cache  = {};
 
 // ── Fetch ─────────────────────────────────────────────────────────────────────
-async function fetchJSON(model, grid, filename) {
-  const key = `heat/${model}/${grid}/${filename}`;
+async function fetchJSON(prob, model, grid, filename) {
+  const key = `${prob}/${model}/${grid}/${filename}`;
   if (_cache[key]) return _cache[key];
   const r = await fetch(`${DATA_ROOT}/${key}`);
-  if (!r.ok) throw new Error(`HTTP ${r.status} — could not load ${DATA_ROOT}/${key}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status} — ${DATA_ROOT}/${key}`);
   _cache[key] = await r.json();
   return _cache[key];
 }
 
-async function loadAll(model, grid) {
-  const [preds, trueSol, errApprox, errFdm, errTrue, meta] = await Promise.all([
-    fetchJSON(model, grid, 'predictions.json'),
-    fetchJSON(model, grid, 'true_solution.json'),
-    fetchJSON(model, grid, 'error_approximation.json'),
-    fetchJSON(model, grid, 'error_fdm.json'),
-    fetchJSON(model, grid, 'error_true.json'),
-    fetchJSON(model, grid, 'meta.json'),
+async function loadAll(prob, model, grid) {
+  const [preds, trueSol, errTrue, errApprox, errFdm, meta] = await Promise.all([
+    fetchJSON(prob, model, grid, 'predictions.json'),
+    fetchJSON(prob, model, grid, 'true_solution.json'),
+    fetchJSON(prob, model, grid, 'error_true.json'),
+    fetchJSON(prob, model, grid, 'error_approximation.json'),
+    fetchJSON(prob, model, grid, 'error_fdm.json'),
+    fetchJSON(prob, model, grid, 'meta.json'),
   ]);
   return {
-    pinn:    preds.data,
-    exact:   trueSol.data,
+    pinn:      preds.data,
+    exact:     trueSol.data,
+    errTrue:   errTrue.data,
     errApprox: errApprox.data,
-    errFdm:  errFdm.data,
-    errTrue: errTrue.data,
+    errFdm:    errFdm.data,
     meta,
   };
 }
 
 // ── Heatmap ───────────────────────────────────────────────────────────────────
-function drawHeatmap(divId, xArr, tArr, zArr, cbTitle, colorscale) {
+function drawHeatmap(divId, xArr, axis2, zArr, cbTitle, xLabel, axis2Label, colorscale) {
   const trace = {
-    type:'heatmap', x:xArr, y:tArr, z:zArr, colorscale,
-    colorbar:{ title:{ text:cbTitle, side:'right', font:{size:10} }, thickness:12, len:0.85, tickfont:{size:9} },
-    hovertemplate:`x: %{x:.3f}<br>t: %{y:.3f}<br>%{z:.4e}<extra></extra>`,
+    type:'heatmap', x:xArr, y:axis2, z:zArr, colorscale,
+    colorbar:{title:{text:cbTitle,side:'right',font:{size:10}},thickness:12,len:0.85,tickfont:{size:9}},
+    hovertemplate:`x: %{x:.3f}<br>${axis2Label}: %{y:.3f}<br>%{z:.4e}<extra></extra>`,
   };
   const layout = {
     ...LAYOUT_BASE,
-    xaxis:{ ...LAYOUT_BASE.xaxis, title:{ text:'x' } },
-    yaxis:{ ...LAYOUT_BASE.yaxis, title:{ text:'t' } },
+    xaxis:{...LAYOUT_BASE.xaxis,title:{text:xLabel}},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:axis2Label}},
   };
   Plotly.react(divId, [trace], layout, PLOT_CFG);
 }
@@ -327,62 +312,36 @@ function drawHeatmap(divId, xArr, tArr, zArr, cbTitle, colorscale) {
 // ── Slice plot ────────────────────────────────────────────────────────────────
 function drawSlice(idx) {
   if (!_d) return;
-  const { pinn, exact, errApprox, errFdm, errTrue, meta } = _d;
-  const xArr = meta.x_axis;
-  const tArr = meta.t_axis;
-  const tVal = tArr[idx];
+  const { pinn, exact, errTrue, errApprox, errFdm, meta } = _d;
+  const prob     = document.getElementById('sel-problem').value;
+  const pmeta    = PROBLEM_META[prob];
+  const xArr     = meta.x_axis;
+  const axis2    = meta[pmeta.axisKey];
+  const axLabel  = pmeta.axisLabel;
+  const axVal    = axis2[idx];
 
-  document.getElementById('slice-value').textContent = tVal.toFixed(4);
-  document.getElementById('line-title').textContent  = `Slice at t = ${tVal.toFixed(4)}`;
-  const pct = (idx / (tArr.length - 1) * 100).toFixed(1);
+  document.getElementById('slice-value').textContent  = axVal.toFixed(4);
+  document.getElementById('line-title').textContent   = `Slice at ${axLabel} = ${axVal.toFixed(4)}`;
+  const pct = (idx / (axis2.length - 1) * 100).toFixed(1);
   document.getElementById('slice-slider').style.setProperty('--pct', pct + '%');
 
   const row = arr => arr[idx] ?? arr[0];
 
   const traces = [
-    {
-      x:xArr, y:row(pinn), mode:'lines', name:'PINN',
-      line:{ color:C.pinn, width:2.5 },
-      hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>`,
-    },
-    {
-      x:xArr, y:row(exact), mode:'lines', name:'Exact',
-      line:{ color:C.exact, width:2, dash:'dash' },
-      hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>`,
-    },
-    {
-      x:xArr, y:row(errTrue), mode:'lines', name:'True Error',
-      line:{ color:C.errTrue, width:2, dash:'solid' },
-      yaxis:'y2',
-      hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>`,
-    },
-    {
-      x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)',
-      line:{ color:C.errApprox, width:1.8, dash:'dot' },
-      yaxis:'y2',
-      hovertemplate:`x: %{x:.3f}<br>Est. error (our method): %{y:.4e}<extra></extra>`,
-    },
-    {
-      x:xArr, y:row(errFdm), mode:'lines', name:'Est. Error (FDM)',
-      line:{ color:C.errFdm, width:1.8, dash:'dashdot' },
-      yaxis:'y2',
-      hovertemplate:`x: %{x:.3f}<br>Est. error (FDM): %{y:.4e}<extra></extra>`,
-    },
+    { x:xArr, y:row(pinn),      mode:'lines', name:'PINN',                    line:{color:C.pinn,      width:2.5},           hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>` },
+    { x:xArr, y:row(exact),     mode:'lines', name:'Exact',                   line:{color:C.exact,     width:2,  dash:'dash'},hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
+    { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',              line:{color:C.errTrue,   width:2,  dash:'solid'},   yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)', line:{color:C.errApprox, width:1.8,dash:'dot'},    yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>Est. (our method): %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. Error (FDM)',        line:{color:C.errFdm,    width:1.8,dash:'dashdot'},yaxis:'y2', hovertemplate:`x: %{x:.3f}<br>Est. (FDM): %{y:.4e}<extra></extra>` },
   ];
 
   const layout = {
     ...LAYOUT_BASE,
-    margin:{ t:14, b:52, l:62, r:62 },
-    xaxis:{ ...LAYOUT_BASE.xaxis, title:{ text:'x', font:{size:11} } },
-    yaxis:{ ...LAYOUT_BASE.yaxis, title:{ text:'u(x, t)', font:{size:11} } },
-    yaxis2:{
-      title:{ text:'|error|', font:{size:11} },
-      overlaying:'y', side:'right',
-      gridcolor:'rgba(255,127,0,0.08)',
-      zerolinecolor:'rgba(255,127,0,0.2)',
-      tickfont:{ size:10 },
-    },
-    legend:{ orientation:'h', x:0.01, y:1.06, font:{size:10}, bgcolor:'transparent' },
+    margin:{t:14,b:52,l:62,r:62},
+    xaxis:{...LAYOUT_BASE.xaxis,title:{text:'x',font:{size:11}}},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}}},
+    yaxis2:{title:{text:'error',font:{size:11}},overlaying:'y',side:'right',gridcolor:'rgba(255,127,0,0.08)',zerolinecolor:'rgba(255,127,0,0.2)',tickfont:{size:10}},
+    legend:{orientation:'h',x:0.01,y:1.08,font:{size:10},bgcolor:'transparent'},
   };
 
   Plotly.react('plot-line', traces, layout, PLOT_CFG);
@@ -390,11 +349,14 @@ function drawSlice(idx) {
 
 // ── Render ────────────────────────────────────────────────────────────────────
 async function render() {
+  const prob  = document.getElementById('sel-problem').value;
   const model = document.getElementById('sel-model').value;
   const grid  = document.getElementById('sel-grid').value;
-  if (!model || !grid) return;
+  if (!prob || !model || !grid) return;
 
-  const btn = document.getElementById('run-btn');
+  const pmeta = PROBLEM_META[prob];
+  const btn   = document.getElementById('run-btn');
+
   btn.disabled = true;
   btn.classList.add('loading');
   btn.querySelector('.btn-label').textContent = 'Loading…';
@@ -405,7 +367,7 @@ async function render() {
   );
 
   try {
-    _d = await loadAll(model, grid);
+    _d = await loadAll(prob, model, grid);
   } catch(e) {
     showError(`Could not load data.<br><small>${e.message}</small>`);
     console.error(e);
@@ -415,27 +377,29 @@ async function render() {
     return;
   }
 
-  const { meta } = _d;
-  const xAxis = meta.x_axis;
-  const tAxis = meta.t_axis;
+  const { meta }  = _d;
+  const xAxis     = meta.x_axis;
+  const axis2     = meta[pmeta.axisKey];
+  const axLabel   = pmeta.axisLabel;
 
   // stats
   document.getElementById('stat-max'  ).textContent = meta.max_error.toExponential(3);
   document.getElementById('stat-mean' ).textContent = meta.mean_error.toExponential(3);
   document.getElementById('stat-l2'   ).textContent = meta.l2_relative.toExponential(3);
   document.getElementById('stat-iters').textContent = meta.pinn_iterations.toLocaleString();
+  document.getElementById('slider-axis-label').textContent = axLabel + ' =';
   document.getElementById('footer-experiment').textContent =
-    `heat · ${model} · grid ${grid}`;
+    `${prob} · ${model} · grid ${grid}`;
 
   // heatmaps
-  drawHeatmap('plot-pinn', xAxis, tAxis, _d.pinn,  'u',        'Blues');
-  drawHeatmap('plot-true', xAxis, tAxis, _d.exact, 'u',        'RdPu');
-  drawHeatmap('plot-err',  xAxis, tAxis, _d.errApprox, '|error|', 'YlOrRd');
+  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'Blues');
+  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu');
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errTrue, '|error|', 'x', axLabel, 'YlOrRd');
 
   // slider
   const slider = document.getElementById('slice-slider');
-  slider.max   = tAxis.length - 1;
-  _sliceIdx    = Math.floor(tAxis.length / 2);
+  slider.max   = axis2.length - 1;
+  _sliceIdx    = Math.floor(axis2.length / 2);
   slider.value = _sliceIdx;
   drawSlice(_sliceIdx);
 
@@ -469,20 +433,25 @@ function showError(msg) {
 
 // ── Events ────────────────────────────────────────────────────────────────────
 function updateRunBtn() {
+  const prob  = document.getElementById('sel-problem').value;
   const model = document.getElementById('sel-model').value;
   const grid  = document.getElementById('sel-grid').value;
-  document.getElementById('run-btn').disabled = !(model && grid);
+  document.getElementById('run-btn').disabled = !(prob && model && grid);
 
   if (model && MODEL_META[model]) {
     const badge = document.getElementById('model-badge');
     badge.textContent = MODEL_META[model].label;
     badge.className   = `model-badge ${MODEL_META[model].cls}`;
   }
+  if (prob && PROBLEM_META[prob]) {
+    document.getElementById('prob-desc').textContent = PROBLEM_META[prob].desc;
+  }
 }
 
-document.getElementById('sel-model').addEventListener('change', updateRunBtn);
-document.getElementById('sel-grid' ).addEventListener('change', updateRunBtn);
-document.getElementById('run-btn'  ).addEventListener('click',  render);
+document.getElementById('sel-problem').addEventListener('change', updateRunBtn);
+document.getElementById('sel-model'  ).addEventListener('change', updateRunBtn);
+document.getElementById('sel-grid'   ).addEventListener('change', updateRunBtn);
+document.getElementById('run-btn'    ).addEventListener('click',  render);
 document.getElementById('slice-slider').addEventListener('input', e => {
   _sliceIdx = parseInt(e.target.value, 10);
   drawSlice(_sliceIdx);
