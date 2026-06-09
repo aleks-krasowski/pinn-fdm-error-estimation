@@ -100,9 +100,11 @@
     .plot-card-title{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600;}
     .plot-container{height:300px;}
 
+    .slice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    @media(max-width:860px){.slice-grid{grid-template-columns:1fr;}}
     .line-card{overflow:hidden;box-shadow:0 2px 16px rgba(55,126,184,0.08);}
     .line-card .plot-card-header{border-left:4px solid var(--blue);}
-    #plot-line{height:360px;}
+    #plot-soln,#plot-errs{height:320px;}
 
     .slider-wrap{padding:18px 24px 20px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--border);background:rgba(255,255,255,0.4);flex-wrap:wrap;}
     .slider-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--blue);font-weight:600;white-space:nowrap;}
@@ -212,20 +214,30 @@
     </div>
   </div>
 
-  <!-- Slice plot -->
+  <!-- Slice plots side by side -->
   <div class="results-section" id="sec-line">
-    <div class="section-title">Slice Plot</div>
-    <div class="line-card glass">
-      <div class="plot-card-header">
-        <div class="dot" style="background:#377eb8"></div>
-        <span class="plot-card-title" id="line-title">Slice at — = —</span>
+    <div class="section-title" id="slice-section-title">Slice Plot — <span id="line-title">—</span></div>
+    <div class="slice-grid">
+      <div class="line-card glass">
+        <div class="plot-card-header">
+          <div class="dot" style="background:#377eb8"></div>
+          <span class="plot-card-title">PINN vs Exact Solution</span>
+        </div>
+        <div id="plot-soln"></div>
       </div>
-      <div id="plot-line"></div>
-      <div class="slider-wrap">
-        <span class="slider-label" id="slider-axis-label">t =</span>
-        <input type="range" id="slice-slider" min="0" max="31" value="0" step="1" />
-        <span id="slice-value">—</span>
+      <div class="line-card glass">
+        <div class="plot-card-header">
+          <div class="dot" style="background:#ff7f00"></div>
+          <span class="plot-card-title">Error Comparison</span>
+        </div>
+        <div id="plot-errs"></div>
       </div>
+    </div>
+    <!-- shared slider below both plots -->
+    <div class="slider-wrap glass" style="margin-top:0;border-radius:0 0 var(--radius) var(--radius);border-top:1px solid var(--border);">
+      <span class="slider-label" id="slider-axis-label">t =</span>
+      <input type="range" id="slice-slider" min="0" max="31" value="0" step="1" />
+      <span id="slice-value">—</span>
     </div>
   </div>
 
@@ -314,39 +326,49 @@ function drawHeatmap(divId, xArr, axis2, zArr, cbTitle, xLabel, axis2Label, colo
   Plotly.react(divId, [trace], layout, PLOT_CFG);
 }
 
-// ── Slice plot ────────────────────────────────────────────────────────────────
+// ── Slice plots ───────────────────────────────────────────────────────────────
 function drawSlice(idx) {
   if (!_d) return;
-  const { errTrue, errApprox, errFdm, meta } = _d;
-  const prob     = document.getElementById('sel-problem').value;
-  const pmeta    = PROBLEM_META[prob];
-  const xArr     = meta.x_axis;
-  const axis2    = meta[pmeta.axisKey];
-  const axLabel  = pmeta.axisLabel;
-  const axVal    = axis2[idx];
+  const { pinn, exact, errTrue, errApprox, errFdm, meta } = _d;
+  const prob    = document.getElementById('sel-problem').value;
+  const pmeta   = PROBLEM_META[prob];
+  const xArr    = meta.x_axis;
+  const axis2   = meta[pmeta.axisKey];
+  const axLabel = pmeta.axisLabel;
+  const axVal   = axis2[idx];
 
-  document.getElementById('slice-value').textContent  = axVal.toFixed(4);
-  document.getElementById('line-title').textContent   = `Slice at ${axLabel} = ${axVal.toFixed(4)}`;
+  document.getElementById('slice-value').textContent = axVal.toFixed(4);
+  document.getElementById('line-title').textContent  = `${axLabel} = ${axVal.toFixed(4)}`;
   const pct = (idx / (axis2.length - 1) * 100).toFixed(1);
   document.getElementById('slice-slider').style.setProperty('--pct', pct + '%');
 
   const row = arr => arr[idx] ?? arr[0];
 
-  const traces = [
-    { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',              line:{color:C.errTrue,   width:2,  dash:'solid'},   hovertemplate:`x: %{x:.3f}<br>True error: %{y:.4e}<extra></extra>` },
-    { x:xArr, y:row(errApprox), mode:'lines', name:'Est. Error (our method)', line:{color:C.errApprox, width:1.8,dash:'dot'},     hovertemplate:`x: %{x:.3f}<br>Est. (our method): %{y:.4e}<extra></extra>` },
-    { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. Error (FDM)',        line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>Est. (FDM): %{y:.4e}<extra></extra>` },
-  ];
-
-  const layout = {
+  const lineLayout = {
     ...LAYOUT_BASE,
-    margin:{t:14,b:52,l:62,r:62},
+    margin:{t:14,b:52,l:62,r:16},
     xaxis:{...LAYOUT_BASE.xaxis,title:{text:'x',font:{size:11}}},
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'error',font:{size:11}}},
-    legend:{orientation:'h',x:0.01,y:1.08,font:{size:10},bgcolor:'transparent'},
+    legend:{orientation:'h',x:0.01,y:1.1,font:{size:10},bgcolor:'transparent'},
   };
 
-  Plotly.react('plot-line', traces, layout, PLOT_CFG);
+  // Left plot: PINN vs Exact solution
+  Plotly.react('plot-soln', [
+    { x:xArr, y:row(pinn),  mode:'lines', name:'PINN',  line:{color:C.pinn,  width:2.5},           hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>` },
+    { x:xArr, y:row(exact), mode:'lines', name:'Exact', line:{color:C.exact, width:2, dash:'dash'}, hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
+  ], { ...lineLayout, yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}}} }, PLOT_CFG);
+
+  // Right plot: error comparison — shared y-axis range so differences are visible
+  const allErr = [...row(errTrue), ...row(errApprox), ...row(errFdm)];
+  const errMax = Math.max(...allErr.map(Math.abs));
+
+  Plotly.react('plot-errs', [
+    { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',         line:{color:C.errTrue,   width:2,  dash:'solid'},   hovertemplate:`x: %{x:.3f}<br>True: %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errApprox), mode:'lines', name:'Est. (our method)',   line:{color:C.errApprox, width:1.8,dash:'dot'},     hovertemplate:`x: %{x:.3f}<br>Our method: %{y:.4e}<extra></extra>` },
+    { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. (FDM baseline)', line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>FDM baseline: %{y:.4e}<extra></extra>` },
+  ], {
+    ...lineLayout,
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},range:[0, errMax*1.15]},
+  }, PLOT_CFG);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
@@ -423,9 +445,11 @@ function showSpinners() {
     document.getElementById(id).innerHTML =
       `<div class="state-box"><div class="spinner"></div><span>Loading…</span></div>`;
   });
-  Plotly.purge('plot-line');
-  document.getElementById('plot-line').innerHTML =
-    `<div class="state-box tall"><div class="spinner"></div><span>Loading…</span></div>`;
+  ['plot-soln','plot-errs'].forEach(id => {
+    Plotly.purge(id);
+    document.getElementById(id).innerHTML =
+      `<div class="state-box tall"><div class="spinner"></div><span>Loading…</span></div>`;
+  });
 }
 
 function showError(msg) {
@@ -433,8 +457,10 @@ function showError(msg) {
     document.getElementById(id).innerHTML =
       `<div class="state-box"><span class="error-icon">⚠</span><span>${msg}</span></div>`;
   });
-  document.getElementById('plot-line').innerHTML =
-    `<div class="state-box tall"><span class="error-icon">⚠</span><span>${msg}</span></div>`;
+  ['plot-soln','plot-errs'].forEach(id => {
+    document.getElementById(id).innerHTML =
+      `<div class="state-box tall"><span class="error-icon">⚠</span><span>${msg}</span></div>`;
+  });
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────
