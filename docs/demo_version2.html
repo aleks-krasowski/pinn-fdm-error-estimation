@@ -223,7 +223,6 @@
         <option value="drift_diffusion">1-D Drift-Diffusion</option>
         <option value="poisson_2d">2-D Poisson Equation</option>
       </select>
-      <span id="prob-desc" class="control-desc"></span>
     </div>
 
     <div class="control-group">
@@ -345,7 +344,7 @@
   </div>
 
   <footer>
-    <span>Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
+    <span>© Fraunhofer HHI · Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
     <span><a href="https://arxiv.org/abs/2603.15526" target="_blank" style="color:var(--blue);text-decoration:none;">arXiv:2603.15526</a></span>
     <span><a href="https://github.com/aleks-krasowski/pinn-fdm-error-estimation" target="_blank" style="color:var(--blue);text-decoration:none;">GitHub</a></span>
     <span><a href="https://www.hhi.fraunhofer.de/impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
@@ -629,10 +628,7 @@ function updateRunBtn() {
     badge.textContent = MODEL_META[model].label;
     badge.className   = `model-badge ${MODEL_META[model].cls}`;
   }
-  if (prob && PROBLEM_META[prob]) {
-    document.getElementById('prob-desc').innerHTML = PROBLEM_META[prob].desc;
-    if (window.MathJax) MathJax.typesetPromise([document.getElementById('prob-desc')]);
-  }
+
 }
 
 document.getElementById('sel-problem').addEventListener('change', updateRunBtn);
