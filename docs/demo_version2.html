@@ -132,6 +132,7 @@
       box-shadow:0 2px 16px rgba(55,126,184,0.08);
       border-left:4px solid var(--blue);
     }
+    .info-col{display:flex;flex-direction:column;}
     @media(max-width:700px){.info-box{grid-template-columns:1fr;}}
     .info-section-label{
       font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
@@ -169,7 +170,7 @@
   <header>
     <h1><span class="w-green">Building Trust in PINNs</span>: Error Estimation through Finite Difference Methods</h1>
     <p class="authors">Aleksander Krasowski &nbsp;·&nbsp; René P. Klausen &nbsp;·&nbsp; Aycan Celik &nbsp;·&nbsp; Sebastian Lapuschkin &nbsp;·&nbsp; Wojciech Samek &nbsp;·&nbsp; Jonas Naujoks</p>
-    <p class="subtitle">Select a benchmark problem, model type and FDM grid size, then click <strong>Run Experiment</strong> to explore PINN solutions and error estimates.</p>
+    <p class="subtitle">An interactive demo for our paper. Pick a benchmark problem, a model type, and an FDM grid size below — then hit <strong>Run Experiment</strong> to see how well our error estimation tracks the true PINN error, and how it compares to the FDM baseline.</p>
   </header>
 
   <!-- Controls -->
@@ -218,42 +219,42 @@
     </div>
   </div>
 
-  <!-- Info box -->
-  <div class="info-box glass" id="info-box">
-    <div>
-      <div class="info-section-label">PINN Architecture</div>
-      <div class="info-row"><span class="info-key">Type</span><span class="info-val">MLP (hard-constrained)</span></div>
-      <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
-      <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
-      <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
-      <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
-      <div class="info-row"><span class="info-key">Library</span><span class="info-val">DeepXDE</span></div>
-    </div>
-    <div>
-      <div class="info-section-label">Experiment Config</div>
-      <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
-      <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
-      <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
-      <div class="info-row"><span class="info-key">Collocation pts</span><span class="info-val" id="info-colloc">—</span></div>
-      <div class="info-row"><span class="info-key">FDM grid</span><span class="info-val" id="info-grid">—</span></div>
-    </div>
-    <div style="grid-column:1/-1;">
-      <div class="info-section-label">Computation Time</div>
-      <div class="timing-row">
-        <div class="timing-chip t-pinn"><span class="tc-label">PINN Training</span><span class="tc-val" id="tc-pinn">—</span></div>
-        <div class="timing-chip t-res" ><span class="tc-label">e_res (ours)</span><span class="tc-val" id="tc-res">—</span></div>
-        <div class="timing-chip t-fdm" ><span class="tc-label">e_FDM (baseline)</span><span class="tc-val" id="tc-fdm">—</span></div>
+  <!-- Info box — hidden until run -->
+  <div class="results-section" id="sec-info">
+    <div class="info-box glass">
+      <!-- Left column: fixed architecture specs -->
+      <div class="info-col">
+        <div class="info-section-label">PINN Architecture</div>
+        <div class="info-row"><span class="info-key">Type</span><span class="info-val">MLP (hard-constrained)</span></div>
+        <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
+        <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
+        <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
+        <div class="info-row"><span class="info-key">Library</span><span class="info-val">DeepXDE</span></div>
+        <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
+        <div style="margin-top:16px;">
+          <div class="info-section-label">Computation Time</div>
+          <div class="timing-row">
+            <div class="timing-chip t-pinn"><span class="tc-label">PINN Training</span><span class="tc-val" id="tc-pinn">—</span></div>
+            <div class="timing-chip t-res"><span class="tc-label">e_res (ours)</span><span class="tc-val" id="tc-res">—</span></div>
+            <div class="timing-chip t-fdm"><span class="tc-label">e_FDM</span><span class="tc-val" id="tc-fdm">—</span></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Stats -->
-  <div class="results-section" id="sec-stats">
-    <div class="stats-bar">
-      <div class="stat-chip glass"><div class="stat-label">Max Error</div><div class="stat-value" id="stat-max">—</div></div>
-      <div class="stat-chip glass"><div class="stat-label">Mean Error</div><div class="stat-value" id="stat-mean">—</div></div>
-      <div class="stat-chip glass"><div class="stat-label">L² Relative Error</div><div class="stat-value" id="stat-l2">—</div></div>
-      <div class="stat-chip glass"><div class="stat-label">PINN Iterations</div><div class="stat-value" id="stat-iters">—</div></div>
+      <!-- Right column: dynamic experiment metadata -->
+      <div class="info-col">
+        <div class="info-section-label">Experiment</div>
+        <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
+        <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
+        <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
+        <div class="info-row"><span class="info-key">Collocation pts</span><span class="info-val" id="info-colloc">—</span></div>
+        <div class="info-row"><span class="info-key">FDM grid</span><span class="info-val" id="info-grid">—</span></div>
+        <div style="margin-top:16px;">
+          <div class="info-section-label">Error Metrics</div>
+          <div class="info-row"><span class="info-key">Max error</span><span class="info-val" id="stat-max">—</span></div>
+          <div class="info-row"><span class="info-key">Mean error</span><span class="info-val" id="stat-mean">—</span></div>
+          <div class="info-row"><span class="info-key">L² relative error</span><span class="info-val highlight" id="stat-l2">—</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -451,7 +452,7 @@ async function render() {
   btn.querySelector('.btn-label').textContent = 'Loading…';
 
   showSpinners();
-  ['sec-stats','sec-heatmaps','sec-line'].forEach(id =>
+  ['sec-info','sec-heatmaps','sec-line'].forEach(id =>
     document.getElementById(id).classList.add('visible')
   );
 
@@ -475,7 +476,6 @@ async function render() {
   document.getElementById('stat-max'  ).textContent = meta.max_error.toExponential(3);
   document.getElementById('stat-mean' ).textContent = meta.mean_error.toExponential(3);
   document.getElementById('stat-l2'   ).textContent = meta.l2_relative.toExponential(3);
-  document.getElementById('stat-iters').textContent = meta.pinn_iterations.toLocaleString();
   document.getElementById('slider-axis-label').textContent = axLabel + ' =';
   document.getElementById('footer-experiment').textContent =
     `${prob} · ${model} · grid ${grid}`;
