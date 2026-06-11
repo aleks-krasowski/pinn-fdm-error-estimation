@@ -125,11 +125,42 @@
 
     footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text-muted);display:flex;gap:24px;flex-wrap:wrap;}
 
+    /* Info box */
+    .info-box{
+      padding:20px 24px;margin-bottom:28px;
+      display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;
+      box-shadow:0 2px 16px rgba(55,126,184,0.08);
+      border-left:4px solid var(--blue);
+    }
+    @media(max-width:700px){.info-box{grid-template-columns:1fr;}}
+    .info-section-label{
+      font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+      color:var(--blue);font-weight:600;margin-bottom:8px;
+    }
+    .info-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:3px 0;border-bottom:1px solid rgba(55,126,184,0.07);}
+    .info-row:last-child{border-bottom:none;}
+    .info-key{font-family:var(--mono);font-size:11px;color:var(--text-muted);}
+    .info-val{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);text-align:right;}
+    .info-val.highlight{color:var(--blue);}
+    /* timing chips inside info box */
+    .timing-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+    .timing-chip{
+      display:flex;flex-direction:column;align-items:center;
+      padding:8px 14px;border-radius:8px;flex:1;min-width:80px;
+      background:rgba(255,255,255,0.6);border:1px solid var(--border);
+    }
+    .timing-chip .tc-label{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px;}
+    .timing-chip .tc-val{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);}
+    .timing-chip.t-pinn  .tc-val{color:#984ea3;}
+    .timing-chip.t-res   .tc-val{color:var(--blue);}
+    .timing-chip.t-fdm   .tc-val{color:var(--orange);}
+
     @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
     .controls    {animation:fadeUp 0.4s ease both;}
     .stats-bar   {animation:fadeUp 0.4s ease 0.06s both;}
     .heatmap-grid{animation:fadeUp 0.4s ease 0.12s both;}
     .line-card   {animation:fadeUp 0.4s ease 0.18s both;}
+    .info-box    {animation:fadeUp 0.4s ease 0.08s both;}
   </style>
 </head>
 <body>
@@ -184,6 +215,35 @@
         <div class="spinner-sm"></div>
         <span class="btn-label">Run Experiment</span>
       </button>
+    </div>
+  </div>
+
+  <!-- Info box -->
+  <div class="info-box glass" id="info-box">
+    <div>
+      <div class="info-section-label">PINN Architecture</div>
+      <div class="info-row"><span class="info-key">Type</span><span class="info-val">MLP (hard-constrained)</span></div>
+      <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
+      <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
+      <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
+      <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
+      <div class="info-row"><span class="info-key">Library</span><span class="info-val">DeepXDE</span></div>
+    </div>
+    <div>
+      <div class="info-section-label">Experiment Config</div>
+      <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
+      <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
+      <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
+      <div class="info-row"><span class="info-key">Collocation pts</span><span class="info-val" id="info-colloc">—</span></div>
+      <div class="info-row"><span class="info-key">FDM grid</span><span class="info-val" id="info-grid">—</span></div>
+    </div>
+    <div style="grid-column:1/-1;">
+      <div class="info-section-label">Computation Time</div>
+      <div class="timing-row">
+        <div class="timing-chip t-pinn"><span class="tc-label">PINN Training</span><span class="tc-val" id="tc-pinn">—</span></div>
+        <div class="timing-chip t-res" ><span class="tc-label">e_res (ours)</span><span class="tc-val" id="tc-res">—</span></div>
+        <div class="timing-chip t-fdm" ><span class="tc-label">e_FDM (baseline)</span><span class="tc-val" id="tc-fdm">—</span></div>
+      </div>
     </div>
   </div>
 
@@ -419,6 +479,18 @@ async function render() {
   document.getElementById('slider-axis-label').textContent = axLabel + ' =';
   document.getElementById('footer-experiment').textContent =
     `${prob} · ${model} · grid ${grid}`;
+
+  // info box
+  const modelLabel = MODEL_META[model]?.label ?? model;
+  document.getElementById('info-problem').textContent  = PROBLEM_META[prob] ? prob.replace(/_/g,' ') : prob;
+  document.getElementById('info-model'  ).textContent  = model === 'well_trained' ? 'Well-Trained' : 'Randomly Initialised';
+  document.getElementById('info-iters'  ).textContent  = (meta.pinn_iterations ?? 0).toLocaleString();
+  document.getElementById('info-colloc' ).textContent  = (meta.pinn_collocation ?? 0).toLocaleString();
+  document.getElementById('info-grid'   ).textContent  = meta.grid ?? grid;
+  const fmt = s => s != null ? (s < 0.001 ? '<0.001 s' : s.toFixed(3) + ' s') : '—';
+  document.getElementById('tc-pinn').textContent = fmt(meta.pinn_training_s);
+  document.getElementById('tc-res' ).textContent = fmt(meta.err_res_s);
+  document.getElementById('tc-fdm' ).textContent = fmt(meta.err_fdm_s);
 
   // heatmaps
   // shared color range for PINN and exact so they're directly comparable
