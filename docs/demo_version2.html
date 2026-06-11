@@ -43,6 +43,7 @@
     h1{font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:600;letter-spacing:-0.02em;line-height:1.25;margin-bottom:14px;}
     h1 .w-green{color:#2e7d32;}
     .subtitle{color:var(--text-dim);font-size:0.97rem;max-width:680px;}
+    .authors{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-bottom:12px;letter-spacing:0.02em;}
 
     .section-title{
       font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
@@ -53,12 +54,12 @@
     .glass{background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:var(--radius);}
 
     .controls{padding:24px;margin-bottom:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;box-shadow:0 4px 24px rgba(55,126,184,0.10);}
-    .control-group{display:flex;flex-direction:column;gap:8px;}
-    label{font-family:var(--mono);font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:var(--blue);font-weight:600;}
+    .control-group{display:flex;flex-direction:column;gap:6px;}
+    label{font-family:var(--mono);font-size:11px;letter-spacing:0.13em;text-transform:uppercase;color:var(--blue);font-weight:600;line-height:1.4;display:block;}
     select{
       background:var(--surface2);color:var(--text);border:1px solid var(--border);
       border-radius:6px;padding:10px 14px;font-family:var(--mono);font-size:13px;
-      cursor:pointer;appearance:none;
+      cursor:pointer;appearance:none;height:42px;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7a99' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
       background-repeat:no-repeat;background-position:right 14px center;
       padding-right:36px;transition:border-color 0.2s,box-shadow 0.2s;
@@ -136,6 +137,7 @@
 
   <header>
     <h1><span class="w-green">Building Trust in PINNs</span>: Error Estimation through Finite Difference Methods</h1>
+    <p class="authors">Aleksander Krasowski &nbsp;·&nbsp; René P. Klausen &nbsp;·&nbsp; Aycan Celik &nbsp;·&nbsp; Sebastian Lapuschkin &nbsp;·&nbsp; Wojciech Samek &nbsp;·&nbsp; Jonas Naujoks</p>
     <p class="subtitle">Select a benchmark problem, model type and FDM grid size, then click <strong>Run Experiment</strong> to explore PINN solutions and error estimates.</p>
   </header>
 
