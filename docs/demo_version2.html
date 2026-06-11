@@ -43,7 +43,9 @@
     h1{font-size:clamp(1.4rem,3.5vw,2.4rem);font-weight:600;letter-spacing:-0.02em;line-height:1.25;margin-bottom:14px;}
     h1 .w-green{color:#2e7d32;}
     .subtitle{color:var(--text-dim);font-size:0.97rem;max-width:680px;}
-    .authors{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-bottom:12px;letter-spacing:0.02em;}
+    .authors{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-bottom:12px;letter-spacing:0.02em;line-height:1.8;}
+    .author-link{color:var(--text-muted);text-decoration:none;border-bottom:1px dotted var(--border);transition:color 0.15s,border-color 0.15s;}
+    .author-link:hover{color:var(--blue);border-color:var(--blue);}
 
     .section-title{
       font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
@@ -169,7 +171,14 @@
 
   <header>
     <h1><span class="w-green">Building Trust in PINNs</span>: Error Estimation through Finite Difference Methods</h1>
-    <p class="authors">Aleksander Krasowski &nbsp;·&nbsp; René P. Klausen &nbsp;·&nbsp; Aycan Celik &nbsp;·&nbsp; Sebastian Lapuschkin &nbsp;·&nbsp; Wojciech Samek &nbsp;·&nbsp; Jonas Naujoks</p>
+    <p class="authors">
+      <a class="author-link" href="https://scholar.google.com/citations?user=tys5WrAAAAAJ&hl=de" target="_blank">Aleksander Krasowski</a> &nbsp;·&nbsp;
+      <a class="author-link" href="https://scholar.google.com/citations?user=-c24aDkAAAAJ&hl=de" target="_blank">René P. Klausen</a> &nbsp;·&nbsp;
+      <span>Aycan Celik</span> &nbsp;·&nbsp;
+      <a class="author-link" href="https://scholar.google.com/citations?user=wpLQuroAAAAJ&hl=de" target="_blank">Sebastian Lapuschkin</a> &nbsp;·&nbsp;
+      <a class="author-link" href="https://scholar.google.com/citations?user=7aQwO08AAAAJ&hl=en" target="_blank">Wojciech Samek</a> &nbsp;·&nbsp;
+      <a class="author-link" href="https://scholar.google.com/citations?user=4OQpbJQAAAAJ&hl=de" target="_blank">Jonas Naujoks</a>
+    </p>
     <p class="subtitle">An interactive demo for our paper. Pick a benchmark problem, a model type, and an FDM grid size below — then hit <strong>Run Experiment</strong> to see how well our error estimation tracks the true PINN error, and how it compares to the FDM baseline.</p>
   </header>
 
@@ -229,7 +238,6 @@
         <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
         <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
         <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
-        <div class="info-row"><span class="info-key">Library</span><span class="info-val">DeepXDE</span></div>
         <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
         <div style="margin-top:16px;">
           <div class="info-section-label">Computation Time</div>
@@ -248,6 +256,9 @@
         <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
         <div class="info-row"><span class="info-key">Collocation pts</span><span class="info-val" id="info-colloc">—</span></div>
         <div class="info-row"><span class="info-key">FDM grid</span><span class="info-val" id="info-grid">—</span></div>
+        <div class="info-row"><span class="info-key">PDE</span><span class="info-val" id="info-pde" style="font-size:11px;">—</span></div>
+        <div class="info-row"><span class="info-key">Boundary cond.</span><span class="info-val" id="info-bc">—</span></div>
+        <div class="info-row"><span class="info-key">Parameters</span><span class="info-val" id="info-params">—</span></div>
         <div style="margin-top:16px;">
           <div class="info-section-label">Error Metrics</div>
           <div class="info-row"><span class="info-key">Max error</span><span class="info-val" id="stat-max">—</span></div>
@@ -320,10 +331,34 @@
 const DATA_ROOT = './data';
 
 const PROBLEM_META = {
-  heat:            { desc:'$u_t = \\alpha\\, u_{xx}$,\u2002 sinusoidal IC, zero Dirichlet BCs',   axisKey:'t_axis', axisLabel:'t' },
-  wave:            { desc:'$u_{tt} = c^2 u_{xx}$,\u2002 sinusoidal IC, zero Dirichlet BCs', axisKey:'t_axis', axisLabel:'t' },
-  drift_diffusion: { desc:'$u_t + \\beta\\, u_x = D\\, u_{xx}$,\u2002 sinusoidal IC', axisKey:'t_axis', axisLabel:'t' },
-  poisson_2d:      { desc:'$-(u_{xx} + u_{yy}) = f(x,y)$,\u2002 zero Dirichlet BCs', axisKey:'y_axis', axisLabel:'y' },
+  heat: {
+    desc:     '$\\frac{\\partial u}{\\partial t} - \\alpha\\frac{\\partial^2 u}{\\partial x^2} = 0$',
+    pde:      '$\\frac{\\partial u}{\\partial t} - \\alpha\\frac{\\partial^2 u}{\\partial x^2} = 0$',
+    bc:       'Dirichlet: $u(x_L) = u(x_R) = 0$',
+    params:   '$\\alpha = \\tfrac{1}{2},\\; u(x,0)=\\sin(2\\pi x)$',
+    axisKey:'t_axis', axisLabel:'t',
+  },
+  wave: {
+    desc:     '$\\frac{\\partial^2 u}{\\partial t^2} - c^2\\frac{\\partial^2 u}{\\partial x^2} = 0$',
+    pde:      '$\\frac{\\partial^2 u}{\\partial t^2} - c^2\\frac{\\partial^2 u}{\\partial x^2} = 0$',
+    bc:       'Dirichlet: $u(x_L) = u(x_R) = 0$',
+    params:   '$c = \\tfrac{1}{2},\\; u(x,0)=\\sin(2\\pi x)$',
+    axisKey:'t_axis', axisLabel:'t',
+  },
+  drift_diffusion: {
+    desc:     '$\\frac{\\partial u}{\\partial t} - \\alpha\\frac{\\partial^2 u}{\\partial x^2} - \\beta\\frac{\\partial u}{\\partial x} = 0$',
+    pde:      '$\\frac{\\partial u}{\\partial t} - \\alpha\\frac{\\partial^2 u}{\\partial x^2} - \\beta\\frac{\\partial u}{\\partial x} = 0$',
+    bc:       'Periodic: $u(x_L) = u(x_R)$',
+    params:   '$\\alpha = \\tfrac{1}{2},\\; \\beta = 2,\\; u(x,0)=\\sin(2\\pi x)$',
+    axisKey:'t_axis', axisLabel:'t',
+  },
+  poisson_2d: {
+    desc:     '$\\nabla^2 u - f = 0$',
+    pde:      '$\\nabla^2 u - f = 0$',
+    bc:       'Dirichlet: $u(x_L) = u(x_R) = 0$',
+    params:   '$f = -(\\tfrac{\\pi^2}{L_x^2}+\\tfrac{\\pi^2}{L_y^2})\\sin(\\tfrac{\\pi x}{L_x})\\sin(\\tfrac{\\pi y}{L_y})$',
+    axisKey:'y_axis', axisLabel:'y',
+  },
 };
 
 const MODEL_META = {
@@ -433,7 +468,7 @@ function drawSlice(idx) {
     { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. (FDM baseline)', line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>FDM baseline: %{y:.4e}<extra></extra>` },
   ], {
     ...lineLayout,
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},range:[0, errMax*1.15]},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}}},
   }, PLOT_CFG);
 }
 
@@ -487,7 +522,7 @@ async function render() {
   document.getElementById('info-iters'  ).textContent  = (meta.pinn_iterations ?? 0).toLocaleString();
   document.getElementById('info-colloc' ).textContent  = (meta.pinn_collocation ?? 0).toLocaleString();
   document.getElementById('info-grid'   ).textContent  = meta.grid ?? grid;
-  const fmt = s => s != null ? (s < 0.001 ? '<0.001 s' : s.toFixed(3) + ' s') : '—';
+  const fmt = s => (s !== null && s !== undefined) ? (s < 0.001 ? '<0.001 s' : s.toFixed(3) + ' s') : '—';
   document.getElementById('tc-pinn').textContent = fmt(meta.pinn_training_s);
   document.getElementById('tc-res' ).textContent = fmt(meta.err_res_s);
   document.getElementById('tc-fdm' ).textContent = fmt(meta.err_fdm_s);
