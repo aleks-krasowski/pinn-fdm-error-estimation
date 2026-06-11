@@ -40,11 +40,9 @@
     .wrapper{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 24px 80px;}
     @media(max-width:600px){.wrapper{padding:0 12px 48px;}}
 
-    header{padding:52px 0 36px;border-bottom:1px solid var(--border);margin-bottom:40px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;}
-    @media(max-width:600px){header{padding:28px 0 24px;flex-direction:column;gap:0;}}
-    .header-text{flex:1;min-width:0;}
-    .header-cup{flex-shrink:0;display:flex;align-items:flex-end;padding-bottom:4px;}
-    @media(max-width:640px){.header-cup{display:none;}}
+    header{padding:52px 0 36px;border-bottom:1px solid var(--border);margin-bottom:40px;}
+    @media(max-width:600px){header{padding:28px 0 24px;}}
+    @media(max-width:640px){.header-text{padding-bottom:24px;}}
     .flame-group{animation:flameRise 3s ease-in-out infinite;}
     .flame-group-2{animation:flameRise 3s ease-in-out infinite 0.6s;}
     .flame-group-3{animation:flameRise 3s ease-in-out infinite 1.2s;}
@@ -212,42 +210,6 @@
       </p>
       <p class="subtitle">An interactive demo for our paper. Pick a benchmark problem, a model type, and an FDM grid size below — then hit <strong>Run Experiment</strong> to see how well our error estimation tracks the true PINN error, and how it compares to the FDM baseline.</p>
     </div>
-
-    <!-- Animated coffee cup -->
-    <div class="header-cup">
-      <svg width="160" height="215" viewBox="0 0 110 148" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <clipPath id="liquidClip">
-            <rect x="18" y="42" width="64" height="72" rx="3"/>
-          </clipPath>
-        </defs>
-
-        <!-- steam lines -->
-        <path class="cup-steam-1" d="M36 30 Q40 22 36 14" fill="none" stroke="rgba(55,126,184,0.4)" stroke-width="2" stroke-linecap="round"/>
-        <path class="cup-steam-2" d="M50 26 Q54 18 50 10" fill="none" stroke="rgba(55,126,184,0.4)" stroke-width="2" stroke-linecap="round"/>
-        <path class="cup-steam-3" d="M64 30 Q68 22 64 14" fill="none" stroke="rgba(55,126,184,0.4)" stroke-width="2" stroke-linecap="round"/>
-
-        <!-- liquid fill (clipped inside cup) -->
-        <g clip-path="url(#liquidClip)">
-          <rect class="cup-fill" x="18" y="72" width="64" height="42" rx="0" fill="#377eb8"/>
-          <!-- wave top of liquid -->
-          <ellipse class="cup-fill" cx="50" cy="72" rx="32" ry="4" fill="#4a8fc4"/>
-        </g>
-
-        <!-- cup body -->
-        <rect x="18" y="42" width="64" height="72" rx="3" fill="rgba(255,255,255,0.85)" stroke="rgba(180,180,200,0.7)" stroke-width="1.5"/>
-
-        <!-- handle -->
-        <path d="M82 56 Q98 56 98 68 Q98 80 82 80" fill="none" stroke="rgba(180,180,200,0.8)" stroke-width="2"/>
-
-        <!-- base / saucer -->
-        <rect x="12" y="114" width="76" height="8" rx="2" fill="rgba(255,255,255,0.9)" stroke="rgba(180,180,200,0.7)" stroke-width="1.5"/>
-        <ellipse cx="50" cy="122" rx="42" ry="4" fill="rgba(255,255,255,0.7)" stroke="rgba(180,180,200,0.5)" stroke-width="1"/>
-
-
-
-      </svg>
-    </div>
   </header>
 
   <!-- Controls -->
@@ -322,8 +284,7 @@
         <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
         <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
         <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
-        <div class="info-row"><span class="info-key">Collocation pts</span><span class="info-val" id="info-colloc">—</span></div>
-        <div class="info-row"><span class="info-key">FDM grid</span><span class="info-val" id="info-grid">—</span></div>
+        <div class="info-row"><span class="info-key">Collocation points</span><span class="info-val" id="info-colloc">—</span></div>
         <div class="info-row"><span class="info-key">PDE</span><span class="info-val" id="info-pde" style="font-size:11px;">—</span></div>
         <div class="info-row"><span class="info-key">Boundary cond.</span><span class="info-val" id="info-bc">—</span></div>
         <div class="info-row"><span class="info-key">Parameters</span><span class="info-val" id="info-params">—</span></div>
@@ -585,15 +546,28 @@ async function render() {
 
   // info box
   const modelLabel = MODEL_META[model]?.label ?? model;
-  document.getElementById('info-problem').textContent  = PROBLEM_META[prob] ? prob.replace(/_/g,' ') : prob;
+  const probLabel = { heat:'Heat Equation', wave:'Wave Equation', drift_diffusion:'Drift-Diffusion', poisson_2d:'Poisson 2D' };
+  document.getElementById('info-problem').textContent = probLabel[prob] ?? prob;
   document.getElementById('info-model'  ).textContent  = model === 'well_trained' ? 'Well-Trained' : 'Randomly Initialised';
   document.getElementById('info-iters'  ).textContent  = (meta.pinn_iterations ?? 0).toLocaleString();
   document.getElementById('info-colloc' ).textContent  = (meta.pinn_collocation ?? 0).toLocaleString();
-  document.getElementById('info-grid'   ).textContent  = meta.grid ?? grid;
   const fmt = s => (s !== null && s !== undefined) ? (s < 0.001 ? '<0.001 s' : s.toFixed(3) + ' s') : '—';
   document.getElementById('tc-pinn').textContent = fmt(meta.pinn_training_s);
   document.getElementById('tc-res' ).textContent = fmt(meta.err_res_s);
   document.getElementById('tc-fdm' ).textContent = fmt(meta.err_fdm_s);
+
+  // PDE / BC / params
+  const pm = PROBLEM_META[prob];
+  const pdeEl    = document.getElementById('info-pde');
+  const bcEl     = document.getElementById('info-bc');
+  const paramsEl = document.getElementById('info-params');
+  if (pdeEl)    pdeEl.innerHTML    = pm.pde;
+  if (bcEl)     bcEl.innerHTML     = pm.bc;
+  if (paramsEl) paramsEl.innerHTML = pm.params;
+  if (window.MathJax) {
+    MathJax.typesetClear([pdeEl, bcEl, paramsEl]);
+    MathJax.typesetPromise([pdeEl, bcEl, paramsEl]);
+  }
 
   // heatmaps
   // shared color range for PINN and exact so they're directly comparable
