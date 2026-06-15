@@ -161,6 +161,11 @@
       border-left:4px solid var(--blue);
     }
     .info-col{display:flex;flex-direction:column;}
+    .hc-note{
+      margin-top:16px;padding:14px 20px;font-size:12.5px;color:var(--text-dim);
+      border-left:4px solid var(--green);line-height:1.6;
+    }
+    .hc-note strong{color:var(--text);}
     @media(max-width:700px){.info-box{grid-template-columns:1fr;}}
     @media(max-width:600px){.info-box{padding:14px 12px;gap:14px 0;}}
     .info-section-label{
@@ -257,46 +262,6 @@
     </div>
   </div>
 
-  <!-- Info box — hidden until run -->
-  <div class="results-section" id="sec-info">
-    <div class="info-box glass">
-      <!-- Left column: fixed architecture specs -->
-      <div class="info-col">
-        <div class="info-section-label">PINN Architecture</div>
-        <div class="info-row"><span class="info-key">Type</span><span class="info-val">MLP (hard-constrained)</span></div>
-        <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
-        <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
-        <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
-        <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
-        <div style="margin-top:16px;">
-          <div class="info-section-label">Computation Time</div>
-          <div class="timing-row">
-            <div class="timing-chip t-pinn"><span class="tc-label">PINN Training</span><span class="tc-val" id="tc-pinn">—</span></div>
-            <div class="timing-chip t-res"><span class="tc-label">e_res (ours)</span><span class="tc-val" id="tc-res">—</span></div>
-            <div class="timing-chip t-fdm"><span class="tc-label">e_FDM</span><span class="tc-val" id="tc-fdm">—</span></div>
-          </div>
-        </div>
-      </div>
-      <!-- Right column: dynamic experiment metadata -->
-      <div class="info-col">
-        <div class="info-section-label">Experiment</div>
-        <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
-        <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
-        <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
-        <div class="info-row"><span class="info-key">Collocation points</span><span class="info-val" id="info-colloc">—</span></div>
-        <div class="info-row"><span class="info-key">PDE</span><span class="info-val" id="info-pde" style="font-size:11px;">—</span></div>
-        <div class="info-row"><span class="info-key">Boundary cond.</span><span class="info-val" id="info-bc">—</span></div>
-        <div class="info-row"><span class="info-key">Parameters</span><span class="info-val" id="info-params">—</span></div>
-        <div style="margin-top:16px;">
-          <div class="info-section-label">Error Metrics</div>
-          <div class="info-row"><span class="info-key">Max error</span><span class="info-val" id="stat-max">—</span></div>
-          <div class="info-row"><span class="info-key">Mean error</span><span class="info-val" id="stat-mean">—</span></div>
-          <div class="info-row"><span class="info-key">L² relative error</span><span class="info-val highlight" id="stat-l2">—</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Heatmaps -->
   <div class="results-section" id="sec-heatmaps">
     <div class="section-title">Heatmaps</div>
@@ -343,12 +308,63 @@
     </div>
   </div>
 
+  <!-- Hard-constraining note -->
+  <div class="results-section" id="sec-hc-note">
+    <div class="hc-note glass">
+      <strong>Why is the error zero at the edges?</strong> The PINN is <em>hard-constrained</em> —
+      initial and boundary conditions are built directly into the network's output, so they are
+      satisfied exactly by construction. As a result, the error is always exactly zero at the
+      domain boundaries (and at <em>t&nbsp;=&nbsp;0</em> for time-dependent problems), which you'll
+      notice when moving the slider to the edges.
+    </div>
+  </div>
+
+  <!-- Info box — hidden until run -->
+  <div class="results-section" id="sec-info">
+    <div class="info-box glass">
+      <!-- Left column: fixed architecture specs -->
+      <div class="info-col">
+        <div class="info-section-label">PINN Architecture</div>
+        <div class="info-row"><span class="info-key">Type</span><span class="info-val">MLP (hard-constrained)</span></div>
+        <div class="info-row"><span class="info-key">Hidden layers</span><span class="info-val highlight">3 × 20 neurons</span></div>
+        <div class="info-row"><span class="info-key">Activation</span><span class="info-val">tanh</span></div>
+        <div class="info-row"><span class="info-key">Optimizer</span><span class="info-val">Adam, lr = 10⁻³</span></div>
+        <div class="info-row"><span class="info-key">Seed</span><span class="info-val">42</span></div>
+        <div style="margin-top:16px;">
+          <div class="info-section-label">Computation Time</div>
+          <div class="timing-row">
+            <div class="timing-chip t-pinn"><span class="tc-label">PINN Training</span><span class="tc-val" id="tc-pinn">—</span></div>
+            <div class="timing-chip t-res"><span class="tc-label">e_res (ours)</span><span class="tc-val" id="tc-res">—</span></div>
+            <div class="timing-chip t-fdm"><span class="tc-label">e_FDM</span><span class="tc-val" id="tc-fdm">—</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Right column: dynamic experiment metadata -->
+      <div class="info-col">
+        <div class="info-section-label">Experiment</div>
+        <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
+        <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
+        <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
+        <div class="info-row"><span class="info-key">Collocation points</span><span class="info-val" id="info-colloc">—</span></div>
+        <div class="info-row"><span class="info-key">PDE</span><span class="info-val" id="info-pde" style="font-size:11px;">—</span></div>
+        <div class="info-row"><span class="info-key">Boundary cond.</span><span class="info-val" id="info-bc">—</span></div>
+        <div class="info-row"><span class="info-key">Parameters</span><span class="info-val" id="info-params">—</span></div>
+        <div style="margin-top:16px;">
+          <div class="info-section-label">Error Metrics</div>
+          <div class="info-row"><span class="info-key">Max error</span><span class="info-val" id="stat-max">—</span></div>
+          <div class="info-row"><span class="info-key">Mean error</span><span class="info-val" id="stat-mean">—</span></div>
+          <div class="info-row"><span class="info-key">L² relative error</span><span class="info-val highlight" id="stat-l2">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <span>© Fraunhofer HHI · Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
     <span><a href="https://arxiv.org/abs/2603.15526" target="_blank" style="color:var(--blue);text-decoration:none;">arXiv:2603.15526</a></span>
     <span><a href="https://github.com/aleks-krasowski/pinn-fdm-error-estimation" target="_blank" style="color:var(--blue);text-decoration:none;">GitHub</a></span>
-    <span><a href="https://www.hhi.fraunhofer.de/impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
-    <span><a href="https://www.hhi.fraunhofer.de/datenschutz.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Datenschutzerklärung</a></span>
+    <span><a href="./impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
+    <span><a href="./datenschutz.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Datenschutzerklärung</a></span>
     <span id="footer-experiment"></span>
   </footer>
 
@@ -515,7 +531,7 @@ async function render() {
   btn.querySelector('.btn-label').textContent = 'Loading…';
 
   showSpinners();
-  ['sec-info','sec-heatmaps','sec-line'].forEach(id =>
+  ['sec-info','sec-heatmaps','sec-line','sec-hc-note'].forEach(id =>
     document.getElementById(id).classList.add('visible')
   );
 
@@ -573,8 +589,22 @@ async function render() {
   const allU   = [..._d.pinn.flat(), ..._d.exact.flat()];
   const uMin   = Math.min(...allU);
   const uMax   = Math.max(...allU);
-  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, 'RdPu',   uMin, uMax);
-  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, 'RdPu',   uMin, uMax);
+
+  // Poisson 2D: solution can take both signs — use a diverging blue-red
+  // colorscale centered at zero instead of a one-sided sequential map.
+  const isPoisson = prob === 'poisson_2d';
+  let solnScale, soZmin, soZmax;
+  if (isPoisson) {
+    const absMax = Math.max(Math.abs(uMin), Math.abs(uMax));
+    solnScale = 'RdBu';
+    soZmin = -absMax; soZmax = absMax;
+  } else {
+    solnScale = 'RdPu';
+    soZmin = uMin; soZmax = uMax;
+  }
+
+  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, solnScale, soZmin, soZmax);
+  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, solnScale, soZmin, soZmax);
   drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, '|e_res|', 'x', axLabel, 'YlOrRd', undefined, undefined);
 
   // slider
