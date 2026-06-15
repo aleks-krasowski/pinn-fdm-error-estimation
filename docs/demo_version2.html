@@ -66,6 +66,8 @@
     .authors{font-family:var(--mono);font-size:12px;color:var(--text-muted);margin-bottom:12px;letter-spacing:0.02em;line-height:1.8;}
     .author-link{color:var(--text-muted);text-decoration:none;border-bottom:1px dotted var(--border);transition:color 0.15s,border-color 0.15s;}
     .author-link:hover{color:var(--blue);border-color:var(--blue);}
+    .paper-link{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);font-weight:600;transition:opacity 0.15s;}
+    .paper-link:hover{opacity:0.7;}
 
     .section-title{
       font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
@@ -212,6 +214,9 @@
         <a class="author-link" href="https://scholar.google.com/citations?user=wpLQuroAAAAJ&hl=de" target="_blank">Sebastian Lapuschkin</a> &nbsp;·&nbsp;
         <a class="author-link" href="https://scholar.google.com/citations?user=7aQwO08AAAAJ&hl=en" target="_blank">Wojciech Samek</a> &nbsp;·&nbsp;
         <a class="author-link" href="https://scholar.google.com/citations?user=4OQpbJQAAAAJ&hl=de" target="_blank">Jonas Naujoks</a>
+        &nbsp;&nbsp;
+        <a class="paper-link" href="https://arxiv.org/abs/2603.15526" target="_blank">arXiv:2603.15526</a> &nbsp;·&nbsp;
+        <a class="paper-link" href="https://github.com/aleks-krasowski/pinn-fdm-error-estimation" target="_blank">GitHub</a>
       </p>
       <p class="subtitle">An interactive demo for our paper. Pick a benchmark problem, a model type, and an FDM grid size below — then hit <strong>Run Experiment</strong> to see how well our error estimation tracks the true PINN error, and how it compares to the FDM baseline.</p>
     </div>
@@ -361,8 +366,6 @@
 
   <footer>
     <span>© Fraunhofer HHI · Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
-    <span><a href="https://arxiv.org/abs/2603.15526" target="_blank" style="color:var(--blue);text-decoration:none;">arXiv:2603.15526</a></span>
-    <span><a href="https://github.com/aleks-krasowski/pinn-fdm-error-estimation" target="_blank" style="color:var(--blue);text-decoration:none;">GitHub</a></span>
     <span><a href="./impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
     <span><a href="./datenschutz.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Datenschutzerklärung</a></span>
     <span id="footer-experiment"></span>
@@ -500,7 +503,7 @@ function drawSlice(idx) {
   Plotly.react('plot-soln', [
     { x:xArr, y:row(pinn),  mode:'lines', name:'PINN',  line:{color:C.pinn,  width:2.5},           hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>` },
     { x:xArr, y:row(exact), mode:'lines', name:'Exact', line:{color:C.exact, width:2, dash:'dash'}, hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
-  ], { ...lineLayout, yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}}} }, PLOT_CFG);
+  ], { ...lineLayout, yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}},autorange:true} }, PLOT_CFG);
 
   // Right plot: error comparison — shared y-axis range so differences are visible
   const allErr = [...row(errTrue), ...row(errApprox), ...row(errFdm)];
@@ -512,7 +515,7 @@ function drawSlice(idx) {
     { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. (FDM baseline)', line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>FDM baseline: %{y:.4e}<extra></extra>` },
   ], {
     ...lineLayout,
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}}},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},autorange:true},
   }, PLOT_CFG);
 }
 
@@ -590,14 +593,15 @@ async function render() {
   const uMin   = Math.min(...allU);
   const uMax   = Math.max(...allU);
 
-  // Poisson 2D: solution can take both signs — use a diverging blue-red
-  // colorscale centered at zero instead of a one-sided sequential map.
+  // Poisson 2D: use a diverging blue-red colorscale (RdBu) across the
+  // natural data range. (A range forced to be symmetric around zero would
+  // collapse mostly-positive poisson data into one half of the scale,
+  // making it look red-only.)
   const isPoisson = prob === 'poisson_2d';
   let solnScale, soZmin, soZmax;
   if (isPoisson) {
-    const absMax = Math.max(Math.abs(uMin), Math.abs(uMax));
     solnScale = 'RdBu';
-    soZmin = -absMax; soZmax = absMax;
+    soZmin = uMin; soZmax = uMax;
   } else {
     solnScale = 'RdPu';
     soZmin = uMin; soZmax = uMax;
