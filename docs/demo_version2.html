@@ -505,17 +505,19 @@ function drawSlice(idx) {
     { x:xArr, y:row(exact), mode:'lines', name:'Exact', line:{color:C.exact, width:2, dash:'dash'}, hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
   ], { ...lineLayout, yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}},autorange:true} }, PLOT_CFG);
 
-  // Right plot: error comparison — shared y-axis range so differences are visible
-  const allErr = [...row(errTrue), ...row(errApprox), ...row(errFdm)];
-  const errMax = Math.max(...allErr.map(Math.abs));
+  // Right plot: error comparison — real-valued scale, recomputed each slider move
+  const errRows = [row(errTrue), row(errApprox), row(errFdm)];
+  const errAllVals = errRows.flat().filter(v => isFinite(v));
+  const errYmax = Math.max(...errAllVals) * 1.08;
+  const errYmin = Math.min(0, Math.min(...errAllVals));
 
-  Plotly.react('plot-errs', [
+  Plotly.newPlot('plot-errs', [
     { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',         line:{color:C.errTrue,   width:2,  dash:'solid'},   hovertemplate:`x: %{x:.3f}<br>True: %{y:.4e}<extra></extra>` },
     { x:xArr, y:row(errApprox), mode:'lines', name:'Est. (our method)',   line:{color:C.errApprox, width:1.8,dash:'dot'},     hovertemplate:`x: %{x:.3f}<br>Our method: %{y:.4e}<extra></extra>` },
     { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. (FDM baseline)', line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>FDM baseline: %{y:.4e}<extra></extra>` },
   ], {
     ...lineLayout,
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},autorange:true},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},range:[errYmin, errYmax]},
   }, PLOT_CFG);
 }
 
