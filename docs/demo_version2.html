@@ -500,7 +500,7 @@ function drawSlice(idx) {
   };
 
   // Left plot: PINN vs Exact solution
-  Plotly.react('plot-soln', [
+  Plotly.newPlot('plot-soln', [
     { x:xArr, y:row(pinn),  mode:'lines', name:'PINN',  line:{color:C.pinn,  width:2.5},           hovertemplate:`x: %{x:.3f}<br>PINN: %{y:.4f}<extra></extra>` },
     { x:xArr, y:row(exact), mode:'lines', name:'Exact', line:{color:C.exact, width:2, dash:'dash'}, hovertemplate:`x: %{x:.3f}<br>Exact: %{y:.4f}<extra></extra>` },
   ], { ...lineLayout, yaxis:{...LAYOUT_BASE.yaxis,title:{text:'u(x)',font:{size:11}},autorange:true} }, PLOT_CFG);
@@ -508,7 +508,7 @@ function drawSlice(idx) {
   // Right plot: error comparison — real-valued scale, recomputed each slider move
   const errRows = [row(errTrue), row(errApprox), row(errFdm)];
   const errAllVals = errRows.flat().filter(v => isFinite(v));
-  const errYmax = Math.max(...errAllVals) * 1.08;
+  const errYmax = Math.max(Math.max(...errAllVals) * 1.08, 1e-6);  // floor so zero-flat lines still render
   const errYmin = Math.min(0, Math.min(...errAllVals));
 
   Plotly.newPlot('plot-errs', [
