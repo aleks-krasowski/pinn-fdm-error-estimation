@@ -667,6 +667,18 @@ function updateRunBtn() {
 
 }
 
+// Reset dropdowns to placeholder on every page load
+// (prevents browser from restoring previous selections)
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sel-problem').value = '';
+  document.getElementById('sel-model').value   = '';
+  document.getElementById('sel-grid').value    = '';
+  document.getElementById('run-btn').disabled  = true;
+  const badge = document.getElementById('model-badge');
+  badge.textContent = 'No model selected';
+  badge.className   = 'model-badge none';
+});
+
 document.getElementById('sel-problem').addEventListener('change', updateRunBtn);
 document.getElementById('sel-model'  ).addEventListener('change', updateRunBtn);
 document.getElementById('sel-grid'   ).addEventListener('change', updateRunBtn);
