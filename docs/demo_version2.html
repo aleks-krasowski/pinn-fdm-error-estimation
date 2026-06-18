@@ -68,6 +68,8 @@
     .author-link:hover{color:var(--blue);border-color:var(--blue);}
     .paper-link{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);font-weight:600;transition:opacity 0.15s;}
     .paper-link:hover{opacity:0.7;}
+    .footer-link{color:var(--text-muted);text-decoration:none;border-bottom:1px dotted var(--text-muted);transition:color 0.15s,border-color 0.15s;}
+    .footer-link:hover{color:var(--blue);border-color:var(--blue);}
 
     .section-title{
       font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
@@ -349,7 +351,7 @@
         <div class="info-section-label">Experiment</div>
         <div class="info-row"><span class="info-key">Problem</span><span class="info-val" id="info-problem">—</span></div>
         <div class="info-row"><span class="info-key">Model type</span><span class="info-val" id="info-model">—</span></div>
-        <div class="info-row"><span class="info-key">Iterations</span><span class="info-val highlight" id="info-iters">—</span></div>
+        <div class="info-row"><span class="info-key">Iterations</span><span class="info-val" id="info-iters">—</span></div>
         <div class="info-row"><span class="info-key">Collocation points</span><span class="info-val" id="info-colloc">—</span></div>
         <div class="info-row"><span class="info-key">PDE</span><span class="info-val" id="info-pde" style="font-size:11px;">—</span></div>
         <div class="info-row"><span class="info-key">Boundary cond.</span><span class="info-val" id="info-bc">—</span></div>
@@ -358,16 +360,16 @@
           <div class="info-section-label">Error Metrics</div>
           <div class="info-row"><span class="info-key">Max error</span><span class="info-val" id="stat-max">—</span></div>
           <div class="info-row"><span class="info-key">Mean error</span><span class="info-val" id="stat-mean">—</span></div>
-          <div class="info-row"><span class="info-key">L² relative error</span><span class="info-val highlight" id="stat-l2">—</span></div>
+          <div class="info-row"><span class="info-key">L² relative error</span><span class="info-val" id="stat-l2">—</span></div>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    <span>© Fraunhofer HHI · Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
-    <span><a href="./impressum.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Impressum</a></span>
-    <span><a href="./datenschutz.html" target="_blank" style="color:var(--text-muted);text-decoration:none;">Datenschutzerklärung</a></span>
+    <span>© <a class="footer-link" href="https://www.hhi.fraunhofer.de/index.html" target="_blank">Fraunhofer HHI</a> · Building Trust in PINNs · Error Estimation through Finite Difference Methods</span>
+    <span><a class="footer-link" href="./impressum.html" target="_blank">Impressum</a></span>
+    <span><a class="footer-link" href="./datenschutz.html" target="_blank">Datenschutzerklärung</a></span>
     <span id="footer-experiment"></span>
   </footer>
 
@@ -410,7 +412,7 @@ const PROBLEM_META = {
 
 const MODEL_META = {
   well_trained: { label:'Well-Trained · 10k iters · 10k pts', cls:'trained' },
-  rand_init:    { label:'Random Init · 0 iters · seed 42',    cls:'random'  },
+  rand_init:    { label:'Randomly Initialised · 0 iters',     cls:'random'  },
 };
 
 const C = { pinn:'#377eb8', exact:'#e41a1c', errTrue:'#4daf4a', errApprox:'#ff7f00', errFdm:'#984ea3' };
@@ -573,7 +575,7 @@ async function render() {
   document.getElementById('info-iters'  ).textContent  = (meta.pinn_iterations ?? 0).toLocaleString();
   document.getElementById('info-colloc' ).textContent  = (meta.pinn_collocation ?? 0).toLocaleString();
   const fmt = s => (s !== null && s !== undefined) ? (s < 0.001 ? '<0.001 s' : s.toFixed(3) + ' s') : '—';
-  document.getElementById('tc-pinn').textContent = fmt(meta.pinn_training_s);
+  document.getElementById('tc-pinn').textContent = model === 'rand_init' ? 'N/A' : fmt(meta.pinn_training_s);
   document.getElementById('tc-res' ).textContent = fmt(meta.err_res_s);
   document.getElementById('tc-fdm' ).textContent = fmt(meta.err_fdm_s);
 
@@ -590,29 +592,21 @@ async function render() {
     MathJax.typesetPromise([pdeEl, bcEl, paramsEl]);
   }
 
-  // heatmaps
-  // shared color range for PINN and exact so they're directly comparable
-  const allU   = [..._d.pinn.flat(), ..._d.exact.flat()];
-  const uMin   = Math.min(...allU);
-  const uMax   = Math.max(...allU);
+  // heatmaps — all colorbars centered at 0, symmetric range
+  // This keeps colorbars consistent across model types and problems
+  const allU    = [..._d.pinn.flat(), ..._d.exact.flat()];
+  const uAbsMax = Math.max(...allU.map(Math.abs));
+  const soZmin  = -uAbsMax;
+  const soZmax  =  uAbsMax;
 
-  // Poisson 2D: use a diverging blue-red colorscale (RdBu) across the
-  // natural data range. (A range forced to be symmetric around zero would
-  // collapse mostly-positive poisson data into one half of the scale,
-  // making it look red-only.)
-  const isPoisson = prob === 'poisson_2d';
-  let solnScale, soZmin, soZmax;
-  if (isPoisson) {
-    solnScale = 'RdBu';
-    soZmin = uMin; soZmax = uMax;
-  } else {
-    solnScale = 'RdPu';
-    soZmin = uMin; soZmax = uMax;
-  }
+  const allErr    = _d.errApprox.flat();
+  const errAbsMax = Math.max(...allErr.map(Math.abs), 1e-10);
+  const erZmin    = -errAbsMax;
+  const erZmax    =  errAbsMax;
 
-  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, solnScale, soZmin, soZmax);
-  drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, solnScale, soZmin, soZmax);
-  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, 'e_res', 'x', axLabel, 'RdBu', undefined, undefined);
+  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,      'u',     'x', axLabel, 'RdBu', soZmin, soZmax);
+  drawHeatmap('plot-true', xAxis, axis2, _d.exact,     'u',     'x', axLabel, 'RdBu', soZmin, soZmax);
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, 'e_res', 'x', axLabel, 'RdBu', erZmin, erZmax);
 
   // slider
   const slider = document.getElementById('slice-slider');
