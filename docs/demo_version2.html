@@ -592,21 +592,29 @@ async function render() {
     MathJax.typesetPromise([pdeEl, bcEl, paramsEl]);
   }
 
-  // heatmaps — all colorbars centered at 0, symmetric range
-  // This keeps colorbars consistent across model types and problems
-  const allU    = [..._d.pinn.flat(), ..._d.exact.flat()];
-  const uAbsMax = Math.max(...allU.map(Math.abs));
-  const soZmin  = -uAbsMax;
-  const soZmax  =  uAbsMax;
+  // heatmaps
+  // True solution range: use exact only (model-independent) so colorbar
+  // is identical across well_trained and rand_init for all problems.
+  const exactFlat  = _d.exact.flat();
+  const exactAbsMax = Math.max(...exactFlat.map(Math.abs), 1e-10);
 
+  // Poisson: natural range (not symmetric) so full RdBu gradient shows
+  // Error heatmap: symmetric around 0
   const allErr    = _d.errApprox.flat();
   const errAbsMax = Math.max(...allErr.map(Math.abs), 1e-10);
-  const erZmin    = -errAbsMax;
-  const erZmax    =  errAbsMax;
 
-  drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,      'u',     'x', axLabel, 'RdBu', soZmin, soZmax);
-  drawHeatmap('plot-true', xAxis, axis2, _d.exact,     'u',     'x', axLabel, 'RdBu', soZmin, soZmax);
-  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, 'e_res', 'x', axLabel, 'RdBu', erZmin, erZmax);
+  if (prob === 'poisson_2d') {
+    // Natural range across actual data — shows full red-to-blue gradient
+    const exactMin = Math.min(...exactFlat);
+    const exactMax = Math.max(...exactFlat);
+    drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,      'u',     'x', axLabel, 'RdBu', exactMin, exactMax);
+    drawHeatmap('plot-true', xAxis, axis2, _d.exact,     'u',     'x', axLabel, 'RdBu', exactMin, exactMax);
+  } else {
+    // Symmetric around 0, range fixed to true solution — consistent across models
+    drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,  'u', 'x', axLabel, 'RdPu', -exactAbsMax, exactAbsMax);
+    drawHeatmap('plot-true', xAxis, axis2, _d.exact, 'u', 'x', axLabel, 'RdPu', -exactAbsMax, exactAbsMax);
+  }
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, 'e_res', 'x', axLabel, 'RdBu', -errAbsMax, errAbsMax);
 
   // slider
   const slider = document.getElementById('slice-slider');
