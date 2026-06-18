@@ -508,8 +508,9 @@ function drawSlice(idx) {
   // Right plot: error comparison — real-valued scale, recomputed each slider move
   const errRows = [row(errTrue), row(errApprox), row(errFdm)];
   const errAllVals = errRows.flat().filter(v => isFinite(v));
-  const errYmax = Math.max(Math.max(...errAllVals) * 1.08, 1e-6);  // floor so zero-flat lines still render
-  const errYmin = Math.min(0, Math.min(...errAllVals));
+  const errAbsMax  = Math.max(Math.max(...errAllVals.map(Math.abs)), 1e-6);
+  const errYmax    =  errAbsMax * 1.08;
+  const errYmin    = -errAbsMax * 1.08;
 
   Plotly.newPlot('plot-errs', [
     { x:xArr, y:row(errTrue),   mode:'lines', name:'True Error',         line:{color:C.errTrue,   width:2,  dash:'solid'},   hovertemplate:`x: %{x:.3f}<br>True: %{y:.4e}<extra></extra>` },
@@ -611,7 +612,7 @@ async function render() {
 
   drawHeatmap('plot-pinn', xAxis, axis2, _d.pinn,    'u',       'x', axLabel, solnScale, soZmin, soZmax);
   drawHeatmap('plot-true', xAxis, axis2, _d.exact,   'u',       'x', axLabel, solnScale, soZmin, soZmax);
-  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, '|e_res|', 'x', axLabel, 'YlOrRd', undefined, undefined);
+  drawHeatmap('plot-err',  xAxis, axis2, _d.errApprox, 'e_res', 'x', axLabel, 'RdBu', undefined, undefined);
 
   // slider
   const slider = document.getElementById('slice-slider');
