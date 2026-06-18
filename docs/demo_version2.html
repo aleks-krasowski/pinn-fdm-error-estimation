@@ -517,7 +517,7 @@ function drawSlice(idx) {
     { x:xArr, y:row(errFdm),    mode:'lines', name:'Est. (FDM baseline)', line:{color:C.errFdm,    width:1.8,dash:'dashdot'}, hovertemplate:`x: %{x:.3f}<br>FDM baseline: %{y:.4e}<extra></extra>` },
   ], {
     ...lineLayout,
-    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'|error|',font:{size:11}},range:[errYmin, errYmax]},
+    yaxis:{...LAYOUT_BASE.yaxis,title:{text:'error',font:{size:11}},range:[errYmin, errYmax]},
   }, PLOT_CFG);
 }
 
