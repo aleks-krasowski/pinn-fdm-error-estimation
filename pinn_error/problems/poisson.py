@@ -10,7 +10,7 @@ from pinn_error.core.problem import BaseProblem, ProblemDomain
 
 
 class Poisson1D(BaseProblem):
-    """1D Heat equation problem definition"""
+    """1D Poisson equation problem definition"""
 
     def __init__(
         self,

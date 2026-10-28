@@ -1,4 +1,4 @@
-"""1D Heat equation problem"""
+"""1D Wave equation problem"""
 
 import deepxde as dde
 import numpy as np

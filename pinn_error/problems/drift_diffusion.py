@@ -35,7 +35,7 @@ class DriftDiffusion(BaseProblem):
         self.diffusivity = diffusivity
 
     def pde(self, x, u) -> torch.Tensor:
-        """Defines the PDE for the 1D heat equation.
+        """Defines the PDE for the 1D drift-diffusion equation.
 
         Parameters
         ----------
