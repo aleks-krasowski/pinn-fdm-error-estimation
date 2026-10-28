@@ -54,56 +54,63 @@ You can execute individual examples using the experiment runner script
 python examples/run_experiment.py --problem heat --frequency 2 --diffusivity 0.05 --nx 16 --nt 16
 ```
 
-For accepted arguments please run 
+For accepted arguments please run
+
 ```bash
 python examples/run_experiment.py --help
-``` 
+```
 
-Currently implemented problems include
-- `heat` (1D heat equation) 
-    - PDE: $\frac{\partial u}{\partial t} - \alpha \frac{\partial^2 u}{\partial x^2} = 0$
-    - IC: $u(x,0) = \sin(n \pi \frac{x}{x_{\mathrm{max}}})$
-    - BCs: 
-        - $u(x_{\mathrm{min}}, t) = 0$ (Dirichlet)
-        - $u(x_{\mathrm{max}}, t) = 0$ (Dirichlet)
-    - named parameters: 
-        - `frequency` $n$
-        - `diffusivity` $\alpha$ 
+Currently implemented problems include the following. By default, all are posed on $x \in [0, 1]$ (and $t \in [0, 1]$ or $y \in [0, 1]$), which can be changed via `--x_min`, `--x_max`, `--t_max`, `--y_min` and `--y_max`. The formulas below assume $x_{\mathrm{min}} = 0$ (and $y_{\mathrm{min}} = 0$).
+
+- `heat` (1D heat equation)
+  - PDE: $\frac{\partial u}{\partial t} - \alpha \frac{\partial^2 u}{\partial x^2} = 0$
+  - IC: $u(x,0) = \sin(n \pi \frac{x}{x_{\mathrm{max}}})$
+  - BCs:
+    - $u(x_{\mathrm{min}}, t) = 0$ (Dirichlet)
+    - $u(x_{\mathrm{max}}, t) = 0$ (Dirichlet)
+  - named parameters:
+    - `frequency` $n$
+    - `diffusivity` $\alpha$
 - `wave` (1D wave equation)
-    - PDE: $\frac{\partial^2 u}{\partial t^2} - c^2 \frac{\partial^2 u}{\partial x^2} = 0$
-    - IC: $u(x,0)=\sin(n \pi \frac{x}{x_{\mathrm{max}}})$
-    - BCs:
-        - $u(x_{\mathrm{min}}, t) = 0$ (Dirichlet)
-        - $u(x_{\mathrm{max}}, t) = 0$ (Dirichlet)
-        - $\frac{\partial u}{\partial t}(x,0) = 0$ (Neumann - initial velocity)
-    - named parameters:
-        - `frequency` $n$
-        - `propagation_speed` $c$
+  - PDE: $\frac{\partial^2 u}{\partial t^2} - c^2 \frac{\partial^2 u}{\partial x^2} = 0$
+  - ICs:
+    - $u(x,0)=\sin(n \pi \frac{x}{x_{\mathrm{max}}})$
+    - $\frac{\partial u}{\partial t}(x,0) = 0$ (initial velocity)
+  - BCs:
+    - $u(x_{\mathrm{min}}, t) = 0$ (Dirichlet)
+    - $u(x_{\mathrm{max}}, t) = 0$ (Dirichlet)
+  - named parameters:
+    - `frequency` $n$
+    - `propagation_speed` $c$
 - `drift_diffusion` (1D convection-diffusion equation)
-    - PDE: $\frac{\partial u}{\partial t} - \alpha \frac{\partial^2 u}{\partial x^2} - v \frac{\partial u}{\partial x} = 0$
-    - IC: $u(x,0)= A + \sin(n \pi \frac{x}{x_{\mathrm{max}}} + \varphi)$
-    - BCs:
-        - $u(x_{\mathrm{min}},t) = (x_{\mathrm{max}},t)$ (Periodic)
-    - named parameters:
-        - `frequency` $n$
-        - `diffusivity` $\alpha$ 
-        - `velocity_x` $v$
-        - `initial_concentration` $A$
-        - `phase_shift` $\varphi$ 
+  - PDE: $\frac{\partial u}{\partial t} - \alpha \frac{\partial^2 u}{\partial x^2} + v \frac{\partial u}{\partial x} = 0$
+  - IC: $u(x,0)= A \sin(n \pi \frac{x}{L} + \varphi)$ with $L = x_{\mathrm{max}} - x_{\mathrm{min}}$
+  - BCs:
+    - $u(x_{\mathrm{min}}, t) = g(x_{\mathrm{min}}, t)$ (Dirichlet)
+    - $u(x_{\mathrm{max}}, t) = g(x_{\mathrm{max}}, t)$ (Dirichlet)
+  - with exact solution: $g(x,t) = A \sin(\varphi + \frac{n \pi}{L} (x - v t)) \cdot \exp(-\alpha (\frac{n \pi}{L})^2 t)$
+  - named parameters:
+    - `frequency` $n$
+    - `diffusivity` $\alpha$
+    - `velocity_x` $v$
+    - `initial_concentration` $A$
+    - `phase_shift` $\varphi$
 - `poisson_1d` (1D Poisson equation - steady)
-    - PDE: $- \frac{\partial^2 u}{\partial x^2} - f(x) = 0$
-    - with source term: $f(x) = (\frac{\pi}{x_{\mathrm{max}}})^2 \cdot \sin(\pi \frac{x}{x_{\mathrm{max}}})$
-    - BCs:
-        - $u(x_\mathrm{min})=0$ (Dirichlet)
-        - $u(x_\mathrm{max})=0$ (Dirichlet)
+  - PDE: $- \frac{\partial^2 u}{\partial x^2} - f(x) = 0$
+  - with source term: $f(x) = (\frac{\pi}{x_{\mathrm{max}}})^2 \cdot \sin(\pi \frac{x}{x_{\mathrm{max}}})$
+  - BCs:
+    - $u(x_\mathrm{min})=0$ (Dirichlet)
+    - $u(x_\mathrm{max})=0$ (Dirichlet)
 - `poisson_2d` (2D Poisson equation - steady)
-    - PDE: $\frac{\partial^2 u}{\partial x^2} - \frac{\partial^2 u}{\partial y^2} - f(x) = 0$
-    - with source term: $f(x) = ((\frac{\pi}{x_{\mathrm{max}}})^2 + (\frac{\pi}{y_{\mathrm{max}}})^2) \cdot \sin(\pi \frac{x}{x_{\mathrm{max}}}) \sin(\pi \frac{y}{y_{\mathrm{max}}})$
-    - BCs:
-        - $u(x_\mathrm{min}, y)=0$ (Dirichlet)
-        - $u(x_\mathrm{max}, y)=0$ (Dirichlet)
-        - $u(x, y_\mathrm{min})=0$ (Dirichlet)
-        - $u(x, y_\mathrm{max})=0$ (Dirichlet)
+  - PDE: $- \frac{\partial^2 u}{\partial x^2} - \frac{\partial^2 u}{\partial y^2} - f(x, y) = 0$
+  - with source term: $f(x, y) = ((\frac{\pi}{x_{\mathrm{max}}})^2 + (\frac{\pi}{y_{\mathrm{max}}})^2) \cdot \sin(\pi \frac{x}{x_{\mathrm{max}}}) \sin(\pi \frac{y}{y_{\mathrm{max}}})$
+  - BCs:
+    - $u(x_\mathrm{min}, y)=0$ (Dirichlet)
+    - $u(x_\mathrm{max}, y)=0$ (Dirichlet)
+    - $u(x, y_\mathrm{min})=0$ (Dirichlet)
+    - $u(x, y_\mathrm{max})=0$ (Dirichlet)
+
+## Reproducing the paper results
 
 # Citing
 
