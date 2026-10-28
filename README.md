@@ -1,49 +1,34 @@
 # Building Trust in PINNs: Error Estimation through Finite Difference Methods
 
-This repository accompanies the paper "[Building Trust in PINNs: Error Estimation through Finite Difference Methods](https://arxiv.org/abs/2603.15526)" (submitted to the XAI World Conference 2026). 
+Aleksander Krasowski, René Pascal Klausen, Aycan Celik, Sebastian Lapuschkin, Wojciech Samek, Jonas Naujoks
+
+[![arXiv](https://img.shields.io/badge/arXiv-2603.15526-b31b1b.svg)](https://arxiv.org/abs/2603.15526) [![Web demo](https://img.shields.io/badge/Web%20demo-pinn--error.hhi.fraunhofer.de-blue)](https://pinn-error.hhi.fraunhofer.de)
+
+This repository accompanies the paper "[Building Trust in PINNs: Error Estimation through Finite Difference Methods](https://arxiv.org/abs/2603.15526)" (late-breaking work at the 4th World Conference on eXplainable Artificial Intelligence, xAI-2026, Fortaleza, Brazil).
 
 We propose a post-hoc method that estimates the pointwise error of physics-informed neural networks by solving the associated error equation via finite difference methods, requiring no knowledge of the true solution.
 
+## Interactive web demo
+
+Check out the error estimation in your browser: [pinn-error.hhi.fraunhofer.de](https://pinn-error.hhi.fraunhofer.de)
+
+[![Web Demo](./assets/web_demo.png)](https://pinn-error.hhi.fraunhofer.de)
+
 ## Quickstart
 
-Just install the package with pip (make sure to run from the project root directory)
-```bash
-pip install .
-```
-
-If you wish to work with Jupyter use this instead
-```bash
-pip install ".[jupyter]"
-```
-
-## Quickstart using `uv`
-
-I recommend using [uv](https://uv.sh) for environment management and quick pip installation.
-
-### 1. Create environment
-
-Go to the project root and create a virtual environment
+I recommend using [uv](https://docs.astral.sh/uv/) for environment management. From the project root, run
 
 ```bash
-uv venv --python 3.13
-```
-
-### 2. Activate the environment
-
-```bash
+uv sync
 source .venv/bin/activate
 ```
 
-### 3. Install the package
+If you wish to work with Jupyter, use `uv sync --extra jupyter` instead.
+
+Without uv, you can install the package with pip (from the project root):
 
 ```bash
-uv pip install .
-```
-
-Alternatively with jupyter dependencies:
-
-```bash
-uv pip install ".[jupyter]"
+pip install .  # or with Jupyter: pip install ".[jupyter]"
 ```
 
 ## Running an example
