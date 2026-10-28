@@ -59,7 +59,7 @@ PROBLEM_DEFAULTS = {
     "velocity_x": 2.0,
     "phase_shift": 0.0,
     "propagation_speed": 0.5,
-    "initital_concentration": 1.0,
+    "initial_concentration": 1.0,
     "x_min": 0.0,
     "x_max": 1.0,
     "t_max": 1.0,  
