@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "Building Trust in PINNs: Error Estimation through Finite Difference Methods"
+type: software
+authors:
+  - family-names: Krasowski
+    given-names: Aleksander
+  - family-names: Klausen
+    given-names: René Pascal
+  - family-names: Celik
+    given-names: Aycan
+  - family-names: Lapuschkin
+    given-names: Sebastian
+  - family-names: Samek
+    given-names: Wojciech
+  - family-names: Naujoks
+    given-names: Jonas
+repository-code: "https://github.com/aleks-krasowski/pinn-fdm-error-estimation"
+url: "https://pinn-error.hhi.fraunhofer.de"
+license: MIT
+version: 0.1.0
+preferred-citation:
+  type: generic
+  title: "Building Trust in PINNs: Error Estimation through Finite Difference Methods"
+  authors:
+    - family-names: Krasowski
+      given-names: Aleksander
+    - family-names: Klausen
+      given-names: René Pascal
+    - family-names: Celik
+      given-names: Aycan
+    - family-names: Lapuschkin
+      given-names: Sebastian
+    - family-names: Samek
+      given-names: Wojciech
+    - family-names: Naujoks
+      given-names: Jonas
+  year: 2026
+  url: "https://arxiv.org/abs/2603.15526"
+  doi: 10.48550/arXiv.2603.15526
+  identifiers:
+    - type: other
+      value: "arXiv:2603.15526"
+      description: arXiv preprint
