@@ -646,8 +646,7 @@ class FDMSolverDriftDiffusion:
             self.stability_flag = True
 
     def _get_boundary_values(self, t: float) -> tuple[float, float]:
-        """Get boundary values at time t from exact solution.
-        (Periodic BC requires left boundary == right boundary)
+        """Get Dirichlet boundary values at time t from exact solution.
 
         Args:
             t: Time value.
