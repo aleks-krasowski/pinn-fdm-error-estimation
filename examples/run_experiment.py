@@ -65,6 +65,7 @@ def main(args):
         "diffusivity": args.diffusivity,
         "velocity_x": args.velocity_x,
         "phase_shift": args.phase_shift,
+        "initial_concentration": args.initial_concentration,
         "propagation_speed": args.propagation_speed,
         "frequency": args.frequency,
     }
@@ -265,6 +266,12 @@ def parse_args():
         type=float,
         default=0.0,
         help="Phase shift for Drift-Diffusion equation IC.",
+    )
+    parser.add_argument(
+        "--initial_concentration",
+        type=float,
+        default=1.0,
+        help="Amplitude of the Drift-Diffusion equation IC.",
     )
 
     # Domain parameters
