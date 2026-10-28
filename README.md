@@ -112,7 +112,29 @@ Currently implemented problems include the following. By default, all are posed 
 
 ## Reproducing the paper results
 
-# Citing
+The results of all experiments in the paper are included in `results/all_experiments_results_float64.csv`, so you can go straight to the plots. To regenerate them, run the batch experiment script once per seed (the paper uses seeds 0 to 9). This runs about 3,000 experiments, so expect it to take a while.
+
+```bash
+for seed in $(seq 0 9); do
+  python examples/run_all_experiments.py --seed $seed
+done
+```
+
+Results are written to `results/all_experiment_results.csv` (change with `--output`), and configurations already in that file are skipped, so an interrupted run can simply be restarted. Use `--dry-run` to preview the configurations. Do not combine the seed loop with `--force`, as it discards the existing file contents on every call.
+
+The figures are created by the following notebooks (install the Jupyter extra and run them from inside `notebooks/`, since they use relative paths) and script:
+
+| Notebook / script | Output |
+| --- | --- |
+| `notebooks/comparison_plot.ipynb` | `figures/comp_plots/`: accuracy of the error estimates over the grid size for each problem (mean and standard deviation over seeds) |
+| `notebooks/heat_eq_err_comp.ipynb` | `figures/heat_eq_error_comparison/`: true and estimated errors of the heat equation at selected time steps |
+| `notebooks/problems.ipynb` | `figures/problems/`: exact solutions of the problems |
+| `notebooks/eval.ipynb` | exploratory plots of the results (not saved) |
+| `python examples/run_experiment.py --problem heat` | `figures/heat_eq_err_comparison_time.pdf`: $L_2$ error over time, including the error bound |
+
+The notebooks read `../results/all_experiments_results_float64.csv`. To plot your own runs, change that path.
+
+## Citing
 
 Please use the following citation when referencing this work in literature:
 
